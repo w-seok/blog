@@ -1,0 +1,444 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f7f7f7">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1b1b1e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta
+    name="viewport"
+    content="width=device-width, user-scalable=no initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
+  >
+
+  <!-- FOUC Prevention: Hide lang-content until JS determines correct language -->
+  <!-- Also hide entire page during language redirect to prevent flash -->
+  <!-- Hide update-list-item by default, JS will show correct language items -->
+  <style>
+    .lang-content { display: none; }
+    .lang-redirect-pending { visibility: hidden; }
+    .update-list-item { display: none; }
+  </style>
+  <script>
+    /* FOUC Prevention: Hide page immediately if redirect is needed */
+    (function() {
+      var SUPPORTED_LANGS = ['ko', 'en', 'es'];
+      var stored = localStorage.getItem('preferred-lang');
+      var pLang = (stored && SUPPORTED_LANGS.indexOf(stored) !== -1) ? stored : null;
+
+      if (!pLang) {
+        var browserLang = (navigator.language || navigator.userLanguage || '').split('-')[0].toLowerCase();
+        pLang = (SUPPORTED_LANGS.indexOf(browserLang) !== -1) ? browserLang : 'ko';
+      }
+
+      var path = window.location.pathname;
+      var basePath = '{{ site.baseurl }}' || '';
+      var isHomepage = (path === basePath + '/' || path === basePath || path === basePath + '/index.html');
+      var pageLang = (path.indexOf('/en/') !== -1) ? 'en' : (path.indexOf('/es/') !== -1) ? 'es' : 'ko';
+
+      /* If on homepage and language mismatch, hide page to prevent FOUC */
+      if (isHomepage && pLang !== pageLang && !sessionStorage.getItem('lang-redirected')) {
+        document.documentElement.classList.add('lang-redirect-pending');
+      }
+    })();
+  </script>
+
+  {%- capture seo_tags -%}
+    {% seo title=false %}
+  {%- endcapture -%}
+
+  <!-- Setup Open Graph image -->
+
+  {% if page.image %}
+    {% assign src = page.image.path | default: page.image %}
+
+    {% unless src contains '://' %}
+      {%- capture img_url -%}
+        {% include media-url.html src=src subpath=page.media_subpath absolute=true %}
+      {%- endcapture -%}
+
+      {%- capture old_url -%}{{ src | absolute_url }}{%- endcapture -%}
+      {%- capture new_url -%}{{ img_url }}{%- endcapture -%}
+
+      {% assign seo_tags = seo_tags | replace: old_url, new_url %}
+    {% endunless %}
+
+  {% elsif site.social_preview_image %}
+    {%- capture img_url -%}
+      {% include media-url.html src=site.social_preview_image absolute=true %}
+    {%- endcapture -%}
+
+    {%- capture og_image -%}
+      <meta property="og:image" content="{{ img_url }}" />
+    {%- endcapture -%}
+
+    {%- capture twitter_image -%}
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta property="twitter:image" content="{{ img_url }}" />
+    {%- endcapture -%}
+
+    {% assign old_meta_clip = '<meta name="twitter:card" content="summary" />' %}
+    {% assign new_meta_clip = og_image | append: twitter_image %}
+    {% assign seo_tags = seo_tags | replace: old_meta_clip, new_meta_clip %}
+  {% endif %}
+
+  {{ seo_tags }}
+
+  <!-- Multilingual hreflang tags for SEO -->
+  {% if page.layout == 'home' %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/" />
+  {% elsif page.layout == 'post' %}
+    {% assign url_parts = page.url | split: '/posts/' %}
+    {% assign post_slug = url_parts.last | split: '/' | first %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/posts/{{ post_slug }}/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/posts/{{ post_slug }}/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
+  {% endif %}
+
+  <title>
+    {%- unless page.layout == 'home' -%}
+      {{ page.title | append: ' | ' }}
+    {%- endunless -%}
+    {{ site.title }}
+  </title>
+
+  {% include_cached favicons.html %}
+
+  <!-- Resource Hints -->
+  {% unless site.assets.self_host.enabled %}
+    {% for hint in site.data.origin.cors.resource_hints %}
+      {% for link in hint.links %}
+        <link rel="{{ link.rel }}" href="{{ hint.url }}" {{ link.opts | join: ' ' }}>
+      {% endfor %}
+    {% endfor %}
+  {% endunless %}
+
+  <!-- Bootstrap -->
+  {% unless jekyll.environment == 'production' %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  {% endunless %}
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{{ '/assets/css/:THEME.css' | replace: ':THEME', site.theme | relative_url }}">
+
+  <!-- Web Font -->
+  <link rel="stylesheet" href="{{ site.data.origin[type].webfonts | relative_url }}">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="{{ site.data.origin[type].fontawesome.css | relative_url }}">
+
+  <!-- 3rd-party Dependencies -->
+
+  {% if site.toc and page.toc %}
+    <link rel="stylesheet" href="{{ site.data.origin[type].toc.css | relative_url }}">
+  {% endif %}
+
+  {% if page.layout == 'post' or page.layout == 'page' or page.layout == 'home' %}
+    <link rel="stylesheet" href="{{ site.data.origin[type]['lazy-polyfill'].css | relative_url }}">
+  {% endif %}
+
+  {% if page.layout == 'page' or page.layout == 'post' %}
+    <!-- Image Popup -->
+    <link rel="stylesheet" href="{{ site.data.origin[type].glightbox.css | relative_url }}">
+  {% endif %}
+
+  <!-- JavaScript -->
+
+  {% unless site.theme_mode %}
+    {% include mode-toggle.html %}
+  {% endunless %}
+
+  {% include metadata-hook.html %}
+
+  <!-- Language Switcher Script -->
+  <script>
+    (function() {
+      var LANG_KEY = 'preferred-lang';
+      var SUPPORTED_LANGS = ['ko', 'en', 'es'];
+      var DEFAULT_LANG = 'ko';
+
+      function detectBrowserLang() {
+        var browserLang = navigator.language || navigator.userLanguage;
+        var langCode = browserLang.split('-')[0].toLowerCase();
+        return SUPPORTED_LANGS.indexOf(langCode) !== -1 ? langCode : DEFAULT_LANG;
+      }
+
+      function getPreferredLang() {
+        var stored = localStorage.getItem(LANG_KEY);
+        if (stored && SUPPORTED_LANGS.indexOf(stored) !== -1) { return stored; }
+        return detectBrowserLang();
+      }
+
+      function setPreferredLang(lang) { localStorage.setItem(LANG_KEY, lang); }
+
+      function getCurrentPageLang() {
+        var path = window.location.pathname;
+        if (path.indexOf('/en/') !== -1) return 'en';
+        if (path.indexOf('/es/') !== -1) return 'es';
+        return 'ko';
+      }
+
+      function getBasePath() {
+        var baseurl = '{{ site.baseurl }}';
+        return baseurl || '';
+      }
+
+      function convertUrlToLang(url, targetLang) {
+        var basePath = getBasePath();
+        var currentLang = getCurrentPageLang();
+        var newUrl = url;
+
+        /* First, normalize to Korean (root) URL by removing any language prefix */
+        if (currentLang === 'en') {
+          newUrl = newUrl.replace(basePath + '/en/', basePath + '/');
+        } else if (currentLang === 'es') {
+          newUrl = newUrl.replace(basePath + '/es/', basePath + '/');
+        }
+
+        /* Language-specific pages: categories, tags, archives, posts, home */
+        var langSpecificPaths = ['/categories/', '/tags/', '/archives/', '/posts/'];
+
+        if (targetLang === 'ko') {
+          /* Already normalized to Korean, return as-is */
+          return newUrl;
+        }
+
+        /* For English or Spanish, add language prefix */
+        var langPrefix = '/' + targetLang;
+
+        /* Check if current path is homepage */
+        if (newUrl === basePath + '/' || newUrl === basePath) {
+          return basePath + langPrefix + '/';
+        }
+
+        /* Check if current path is a language-specific page */
+        for (var i = 0; i < langSpecificPaths.length; i++) {
+          if (newUrl.indexOf(basePath + langSpecificPaths[i]) !== -1) {
+            return newUrl.replace(basePath + langSpecificPaths[i], basePath + langPrefix + langSpecificPaths[i]);
+          }
+        }
+
+        /* For non-language-specific pages (about, privacy), return as-is */
+        return newUrl;
+      }
+
+      /* Auto redirect on first visit based on browser language */
+      (function() {
+        var hasVisited = sessionStorage.getItem('lang-redirected');
+        if (hasVisited) return;
+
+        var pLang = getPreferredLang();
+        var pageLang = getCurrentPageLang();
+        var basePath = getBasePath();
+        var currentPath = window.location.pathname;
+
+        /* Only redirect on homepage */
+        var isHomepage = (currentPath === basePath + '/' || currentPath === basePath || currentPath === basePath + '/index.html');
+
+        if (isHomepage && pLang !== pageLang) {
+          sessionStorage.setItem('lang-redirected', 'true');
+          var newPath = convertUrlToLang(currentPath, pLang);
+          if (newPath !== currentPath) {
+            window.location.href = newPath;
+          }
+        }
+      })();
+
+      /* Filter lang-content divs by language */
+      function filterContentByLang(lang) {
+        var langContents = document.querySelectorAll('.lang-content');
+        for (var i = 0; i < langContents.length; i++) {
+          var contentLang = langContents[i].getAttribute('data-lang');
+          langContents[i].style.display = (contentLang === lang) ? 'block' : 'none';
+        }
+      }
+
+      /* Update sidebar navigation labels by language */
+      function updateSidebarLabels(lang) {
+        var navLabels = document.querySelectorAll('.nav-label');
+        for (var i = 0; i < navLabels.length; i++) {
+          var labelText = navLabels[i].getAttribute('data-' + lang);
+          if (labelText) {
+            navLabels[i].textContent = labelText;
+          }
+        }
+      }
+
+      /* Update panel labels (Recently Updated, Trending Tags, etc.) by language */
+      function updatePanelLabels(lang) {
+        var panelLabels = document.querySelectorAll('.panel-label');
+        for (var i = 0; i < panelLabels.length; i++) {
+          var labelText = panelLabels[i].getAttribute('data-' + lang);
+          if (labelText) {
+            panelLabels[i].textContent = labelText;
+          }
+        }
+      }
+
+      /* Update footer copyright text by language */
+      function updateFooterText(lang) {
+        var copyrightBrief = document.querySelector('.copyright-brief');
+        if (copyrightBrief) {
+          var text = copyrightBrief.getAttribute('data-' + lang);
+          var tooltip = copyrightBrief.getAttribute('data-tooltip-' + lang);
+          if (text) { copyrightBrief.textContent = text; }
+          if (tooltip) { copyrightBrief.setAttribute('title', tooltip); }
+        }
+      }
+
+      /* Update search placeholder and cancel button by language */
+      function updateSearchText(lang) {
+        var searchInput = document.getElementById('search-input');
+        var searchCancel = document.getElementById('search-cancel');
+        if (searchInput) {
+          var placeholder = searchInput.getAttribute('data-placeholder-' + lang);
+          if (placeholder) { searchInput.setAttribute('placeholder', placeholder); }
+        }
+        if (searchCancel) {
+          var cancelText = searchCancel.getAttribute('data-' + lang);
+          if (cancelText) { searchCancel.textContent = cancelText; }
+        }
+      }
+
+      /* Update breadcrumb text by language */
+      function updateBreadcrumbText(lang) {
+        var breadcrumbHomes = document.querySelectorAll('.breadcrumb-home');
+        for (var i = 0; i < breadcrumbHomes.length; i++) {
+          var text = breadcrumbHomes[i].getAttribute('data-' + lang);
+          if (text) { breadcrumbHomes[i].textContent = text; }
+        }
+        var breadcrumbTabs = document.querySelectorAll('.breadcrumb-tab');
+        for (var j = 0; j < breadcrumbTabs.length; j++) {
+          var tabText = breadcrumbTabs[j].getAttribute('data-' + lang);
+          if (tabText) { breadcrumbTabs[j].textContent = tabText; }
+        }
+      }
+
+      /* Update page title (h1) by language */
+      function updatePageTitle(lang) {
+        var pageTitles = document.querySelectorAll('.page-title-label');
+        for (var i = 0; i < pageTitles.length; i++) {
+          var titleText = pageTitles[i].getAttribute('data-' + lang);
+          if (titleText) { pageTitles[i].textContent = titleText; }
+        }
+      }
+
+      /* Filter Recently Updated list items by language */
+      function filterUpdateListByLang(lang) {
+        var items = document.querySelectorAll('.update-list-item');
+        for (var i = 0; i < items.length; i++) {
+          var itemLang = items[i].getAttribute('data-locale');
+          items[i].style.display = (itemLang === lang) ? 'list-item' : 'none';
+        }
+      }
+
+      /* Update all language-dependent UI elements */
+      function updateAllUILabels(lang) {
+        updateSidebarLabels(lang);
+        updatePanelLabels(lang);
+        updateFooterText(lang);
+        updateSearchText(lang);
+        updateBreadcrumbText(lang);
+        updatePageTitle(lang);
+        filterUpdateListByLang(lang);
+      }
+
+      /* Language switcher click handler */
+      document.addEventListener('DOMContentLoaded', function() {
+        var langOptions = document.querySelectorAll('.lang-option');
+        var langSwitcher = document.getElementById('lang-switcher');
+        var langToggle = document.getElementById('lang-toggle');
+        var preferredLang = getPreferredLang();
+
+        /* Determine which language to use:
+           - For language-specific pages (with /en/ or /es/ in URL): use URL-based language
+           - For Korean root pages (no language prefix): use user's preferred language */
+        var pageLang = getCurrentPageLang();
+        var hasLangContent = document.querySelectorAll('.lang-content').length > 0;
+
+        /* Check if current page is a homepage */
+        var basePath = getBasePath();
+        var currentPath = window.location.pathname;
+        var isHomepage = (currentPath === basePath + '/' || currentPath === basePath ||
+                          currentPath === basePath + '/index.html' ||
+                          currentPath === basePath + '/en/' || currentPath === basePath + '/en' ||
+                          currentPath === basePath + '/es/' || currentPath === basePath + '/es');
+
+        /* If URL has explicit language prefix (/en/, /es/), use that language.
+           For homepage, always use URL-based language.
+           For other Korean root pages (no prefix), use user's preferred language. */
+        var urlHasLangPrefix = (pageLang === 'en' || pageLang === 'es');
+        var sidebarLang = (urlHasLangPrefix || isHomepage) ? pageLang : preferredLang;
+
+        /* For content filtering on pages with lang-content divs */
+        var displayLang = urlHasLangPrefix ? pageLang : preferredLang;
+
+        /* Apply lang filter for pages with lang-content */
+        if (hasLangContent) {
+          filterContentByLang(displayLang);
+        }
+
+        /* Update all UI labels based on determined language */
+        updateAllUILabels(sidebarLang);
+
+        if (langToggle && langSwitcher) {
+          langToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            langSwitcher.classList.toggle('open');
+          });
+          document.addEventListener('click', function(e) {
+            if (!langSwitcher.contains(e.target)) { langSwitcher.classList.remove('open'); }
+          });
+        }
+
+        for (var i = 0; i < langOptions.length; i++) {
+          langOptions[i].addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            var targetLang = this.getAttribute('data-lang');
+            setPreferredLang(targetLang);
+            if (langSwitcher) { langSwitcher.classList.remove('open'); }
+            var currentPath = window.location.pathname;
+            var newPath = convertUrlToLang(currentPath, targetLang);
+            if (newPath !== currentPath) {
+              window.location.href = newPath;
+            } else {
+              filterContentByLang(targetLang);
+              updateAllUILabels(targetLang);
+              for (var j = 0; j < langOptions.length; j++) { langOptions[j].classList.remove('active'); }
+              this.classList.add('active');
+            }
+          });
+        }
+
+        for (var m = 0; m < langOptions.length; m++) {
+          if (langOptions[m].getAttribute('data-lang') === displayLang) {
+            langOptions[m].classList.add('active');
+          }
+        }
+      });
+
+      /* Get the display language for current page
+         - For URL with language prefix (/en/, /es/): use URL language
+         - For Korean root pages: use user's preferred language */
+      function getDisplayLang() {
+        var pageLang = getCurrentPageLang();
+        var urlHasLangPrefix = (pageLang === 'en' || pageLang === 'es');
+        if (urlHasLangPrefix) {
+          return pageLang;
+        }
+        return getPreferredLang();
+      }
+
+      window.langUtils = {
+        getPreferredLang: getPreferredLang,
+        setPreferredLang: setPreferredLang,
+        getCurrentPageLang: getCurrentPageLang,
+        getDisplayLang: getDisplayLang
+      };
+    })();
+  </script>
+</head>

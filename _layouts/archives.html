@@ -1,0 +1,72 @@
+---
+layout: page
+# The Archives of posts.
+---
+
+{% include lang.html %}
+
+{% assign df_strftime_m = site.data.locales[lang].df.archives.strftime | default: '/ %m' %}
+{% assign df_dayjs_m = site.data.locales[lang].df.archives.dayjs | default: '/ MM' %}
+
+<div id="archives" class="pl-xl-3">
+  {% for post in site.posts %}
+    {% assign cur_year = post.date | date: '%Y' %}
+
+    {% if cur_year != last_year %}
+      {% unless forloop.first %}</ul>{% endunless %}
+
+      <time class="year lead d-block" data-year="{{ cur_year }}">{{ cur_year }}</time>
+      {{ '<ul class="list-unstyled">' }}
+
+      {% assign last_year = cur_year %}
+    {% endif %}
+
+    <li data-locale="{{ post.locale | default: 'ko' }}">
+      {% assign ts = post.date | date: '%s' %}
+      <span class="date day" data-ts="{{ ts }}" data-df="DD">{{ post.date | date: '%d' }}</span>
+      <span class="date month small text-muted ms-1" data-ts="{{ ts }}" data-df="{{ df_dayjs_m }}">
+        {{ post.date | date: df_strftime_m }}
+      </span>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+    </li>
+
+    {% if forloop.last %}</ul>{% endif %}
+  {% endfor %}
+</div>
+
+<script>
+(function() {
+  function filterArchivesByLang() {
+    /* Use langUtils.getDisplayLang() for URL-aware language detection */
+    var lang = (window.langUtils && window.langUtils.getDisplayLang)
+      ? window.langUtils.getDisplayLang()
+      : (localStorage.getItem('preferred-lang') || 'ko');
+    var items = document.querySelectorAll('#archives li[data-locale]');
+    for (var i = 0; i < items.length; i++) {
+      var itemLocale = items[i].getAttribute('data-locale');
+      items[i].style.display = (itemLocale === lang) ? '' : 'none';
+    }
+    /* 연도 헤더 숨기기 (해당 연도에 보이는 포스트가 없으면) */
+    var years = document.querySelectorAll('#archives time[data-year]');
+    for (var j = 0; j < years.length; j++) {
+      var yearEl = years[j];
+      var ul = yearEl.nextElementSibling;
+      if (ul && ul.tagName === 'UL') {
+        var visibleItems = ul.querySelectorAll('li[data-locale][style=""]');
+        var hasVisible = false;
+        var allItems = ul.querySelectorAll('li[data-locale]');
+        for (var k = 0; k < allItems.length; k++) {
+          if (allItems[k].style.display !== 'none') {
+            hasVisible = true;
+            break;
+          }
+        }
+        yearEl.style.display = hasVisible ? '' : 'none';
+        ul.style.display = hasVisible ? '' : 'none';
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', filterArchivesByLang);
+  window.filterArchivesByLang = filterArchivesByLang;
+})();
+</script>

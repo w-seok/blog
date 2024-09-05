@@ -1,0 +1,157 @@
+<!-- JSON-LD Structured Data for SEO/GEO/AEO -->
+{% assign page_lang = page.lang | default: site.lang | default: 'ko-KR' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "{{ site.title }}",
+  "description": "{{ site.description }}",
+  "url": "{{ site.url }}{{ site.baseurl }}/",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.social.name }}",
+    "url": "{{ site.social.links[0] }}"
+  },
+  "inLanguage": "{{ page_lang }}",
+  "availableLanguage": ["ko-KR", "en", "es-ES"]
+}
+</script>
+
+{% if page.layout == 'post' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ page.title | xml_escape }}",
+  "description": "{{ page.description | default: page.excerpt | strip_html | truncate: 160 | xml_escape }}",
+  "datePublished": "{{ page.date | date_to_xmlschema }}",
+  "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.social.name }}",
+    "url": "{{ site.social.links[0] }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": "{{ site.social.name }}"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ page.url | absolute_url }}"
+  },
+  "url": "{{ page.url | absolute_url }}",
+  "inLanguage": "{{ page_lang }}"
+  {% if page.categories.size > 0 %},
+  "articleSection": "{{ page.categories | first }}"
+  {% endif %}
+  {% if page.tags.size > 0 %},
+  "keywords": "{{ page.tags | join: ', ' }}"
+  {% endif %}
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "{{ site.url }}{{ site.baseurl }}/"
+    }
+    {% if page.categories.size > 0 %},
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ page.categories | first }}",
+      "item": "{{ site.url }}{{ site.baseurl }}/categories/{{ page.categories | first | slugify }}/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "{{ page.title | xml_escape }}"
+    }
+    {% else %},
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ page.title | xml_escape }}"
+    }
+    {% endif %}
+  ]
+}
+</script>
+{% endif %}
+
+{% if page.layout == 'home' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Blog",
+  "name": "{{ site.title }}",
+  "description": "{{ site.description }}",
+  "url": "{{ site.url }}{{ site.baseurl }}/",
+  "author": {
+    "@type": "Person",
+    "name": "{{ site.social.name }}",
+    "url": "{{ site.social.links[0] }}"
+  },
+  "inLanguage": "{{ page_lang }}",
+  "availableLanguage": ["ko-KR", "en", "es-ES"]
+}
+</script>
+{% endif %}
+
+{% comment %} FAQ Schema - 포스트 front matter에 faq 배열이 있으면 생성 {% endcomment %}
+{% if page.faq and page.faq.size > 0 %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for item in page.faq %}
+    {
+      "@type": "Question",
+      "name": "{{ item.question | xml_escape }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ item.answer | xml_escape }}"
+      }
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+
+{% comment %} HowTo Schema - 포스트 front matter에 howto가 있으면 생성 {% endcomment %}
+{% if page.howto %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "{{ page.howto.name | default: page.title | xml_escape }}",
+  "description": "{{ page.howto.description | default: page.description | xml_escape }}"
+  {% if page.howto.totalTime %},
+  "totalTime": "{{ page.howto.totalTime }}"
+  {% endif %}
+  {% if page.howto.steps and page.howto.steps.size > 0 %},
+  "step": [
+    {% for step in page.howto.steps %}
+    {
+      "@type": "HowToStep",
+      "position": {{ forloop.index }},
+      "name": "{{ step.name | xml_escape }}",
+      "text": "{{ step.text | xml_escape }}"
+      {% if step.url %},
+      "url": "{{ step.url }}"
+      {% endif %}
+    }{% unless forloop.last %},{% endunless %}
+    {% endfor %}
+  ]
+  {% endif %}
+}
+</script>
+{% endif %}

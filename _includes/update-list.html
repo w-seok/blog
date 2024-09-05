@@ -1,0 +1,31 @@
+<!-- Get 5 last posted/updated posts for ALL languages -->
+<!-- JS will filter by preferred language using data-locale attribute -->
+
+{% assign MAX_SIZE = 5 %}
+
+{% comment %} 모든 언어별로 최신 포스트 수집 {% endcomment %}
+{% assign ko_posts = site.posts | where: "locale", "ko" | sort: "last_modified_at" | reverse %}
+{% assign en_posts = site.posts | where: "locale", "en" | sort: "last_modified_at" | reverse %}
+{% assign es_posts = site.posts | where: "locale", "es" | sort: "last_modified_at" | reverse %}
+
+<section id="access-lastmod">
+  <h2 class="panel-heading panel-label" data-ko="{{- site.data.locales['ko-KR'].panel.lastmod -}}" data-en="{{- site.data.locales['en'].panel.lastmod -}}" data-es="{{- site.data.locales['es-ES'].panel.lastmod -}}">{{- site.data.locales[include.lang].panel.lastmod -}}</h2>
+  <ul class="content list-unstyled ps-0 pb-1 ms-1 mt-2">
+    {% for post in ko_posts limit: MAX_SIZE %}
+      <li class="text-truncate lh-lg update-list-item" data-locale="ko">
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+    {% for post in en_posts limit: MAX_SIZE %}
+      <li class="text-truncate lh-lg update-list-item" data-locale="en">
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+    {% for post in es_posts limit: MAX_SIZE %}
+      <li class="text-truncate lh-lg update-list-item" data-locale="es">
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>
+<!-- #access-lastmod -->

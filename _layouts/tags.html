@@ -1,0 +1,57 @@
+---
+layout: page
+# All the Tags of posts.
+---
+
+<div id="tags" class="d-flex flex-wrap mx-xl-2">
+  {% for t in site.tags %}
+    {% assign tag_name = t[0] %}
+    {% assign tag_posts = t[1] %}
+    {% for post in tag_posts %}
+      <span class="tag-item" data-tag="{{ tag_name }}" data-locale="{{ post.locale | default: 'ko' }}" style="display:none;"></span>
+    {% endfor %}
+  {% endfor %}
+
+  {% assign sorted_tags = site.tags | sort %}
+  {% for t in sorted_tags %}
+    <div class="tag-wrapper" data-tag="{{ t[0] }}">
+      <a class="tag" href="{{ t[0] | slugify | url_encode | prepend: '/tags/' | append: '/' | relative_url }}">
+        {{ t[0] -}}
+        <span class="text-muted tag-count">{{ t[1].size }}</span>
+      </a>
+    </div>
+  {% endfor %}
+</div>
+
+<script>
+(function() {
+  function filterTagsByLang() {
+    var lang = localStorage.getItem('preferred-lang') || 'ko';
+    var tagItems = document.querySelectorAll('#tags .tag-item');
+    var tagCounts = {};
+
+    for (var i = 0; i < tagItems.length; i++) {
+      var tagName = tagItems[i].getAttribute('data-tag');
+      var locale = tagItems[i].getAttribute('data-locale');
+      if (locale === lang) {
+        tagCounts[tagName] = (tagCounts[tagName] || 0) + 1;
+      }
+    }
+
+    var tagWrappers = document.querySelectorAll('#tags .tag-wrapper');
+    for (var j = 0; j < tagWrappers.length; j++) {
+      var tag = tagWrappers[j].getAttribute('data-tag');
+      var count = tagCounts[tag] || 0;
+      var countEl = tagWrappers[j].querySelector('.tag-count');
+      if (count > 0) {
+        tagWrappers[j].style.display = '';
+        if (countEl) countEl.textContent = count;
+      } else {
+        tagWrappers[j].style.display = 'none';
+      }
+    }
+  }
+  document.addEventListener('DOMContentLoaded', filterTagsByLang);
+  window.filterTagsByLang = filterTagsByLang;
+})();
+</script>
