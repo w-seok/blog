@@ -18,7 +18,7 @@
     .update-list-item { display: none; }
   </style>
   <script>
-    /* FOUC Prevention: Hide page immediately if redirect is needed */
+    /* FOUC Prevention: Hide page immediately if language mismatch detected */
     (function() {
       var SUPPORTED_LANGS = ['ko', 'en', 'es'];
       var stored = localStorage.getItem('preferred-lang');
@@ -31,11 +31,20 @@
 
       var path = window.location.pathname;
       var basePath = '{{ site.baseurl }}' || '';
-      var isHomepage = (path === basePath + '/' || path === basePath || path === basePath + '/index.html');
       var pageLang = (path.indexOf('/en/') !== -1) ? 'en' : (path.indexOf('/es/') !== -1) ? 'es' : 'ko';
 
-      /* If on homepage and language mismatch, hide page to prevent FOUC */
-      if (isHomepage && pLang !== pageLang && !sessionStorage.getItem('lang-redirected')) {
+      /* Pages that have language-specific versions (will redirect) */
+      var langSpecificPages = ['/', '/index.html', '/archives/', '/categories/', '/tags/'];
+      var isLangSpecificPage = false;
+      for (var i = 0; i < langSpecificPages.length; i++) {
+        if (path === basePath + langSpecificPages[i] || path === basePath) {
+          isLangSpecificPage = true;
+          break;
+        }
+      }
+
+      /* If on a language-specific page with language mismatch, hide to prevent FOUC */
+      if (isLangSpecificPage && pLang !== pageLang) {
         document.documentElement.classList.add('lang-redirect-pending');
       }
     })();
@@ -224,24 +233,36 @@
         return newUrl;
       }
 
-      /* Auto redirect on first visit based on browser language */
+      /* Auto redirect based on preferred language for language-specific pages */
       (function() {
-        var hasVisited = sessionStorage.getItem('lang-redirected');
-        if (hasVisited) return;
+        /* Skip if redirect already happened this session (for testing) */
+        if (sessionStorage.getItem('lang-redirected')) return;
 
         var pLang = getPreferredLang();
         var pageLang = getCurrentPageLang();
         var basePath = getBasePath();
         var currentPath = window.location.pathname;
 
-        /* Only redirect on homepage */
-        var isHomepage = (currentPath === basePath + '/' || currentPath === basePath || currentPath === basePath + '/index.html');
+        /* Skip if already on correct language */
+        if (pLang === pageLang) return;
 
-        if (isHomepage && pLang !== pageLang) {
+        /* Pages that have language-specific versions */
+        var langSpecificPaths = ['/', '/index.html', '/archives/', '/categories/', '/tags/'];
+        var isLangSpecificPage = false;
+        for (var i = 0; i < langSpecificPaths.length; i++) {
+          var checkPath = basePath + langSpecificPaths[i];
+          if (currentPath === checkPath || currentPath === basePath) {
+            isLangSpecificPage = true;
+            break;
+          }
+        }
+
+        /* Redirect to correct language version */
+        if (isLangSpecificPage) {
           sessionStorage.setItem('lang-redirected', 'true');
           var newPath = convertUrlToLang(currentPath, pLang);
           if (newPath !== currentPath) {
-            window.location.href = newPath;
+            window.location.replace(newPath);
           }
         }
       })();
@@ -335,8 +356,43 @@
       }
 
       /* Update all language-dependent UI elements */
+      /* Update sidebar navigation links by language */
+      function updateSidebarLinks(lang) {
+        var basePath = getBasePath();
+        var langPrefix = (lang === 'ko') ? '' : '/' + lang;
+        var langSpecificPaths = ['/categories/', '/tags/', '/archives/'];
+
+        /* Update nav links */
+        var navLinks = document.querySelectorAll('.nav-link');
+        for (var i = 0; i < navLinks.length; i++) {
+          var href = navLinks[i].getAttribute('href');
+          if (!href) continue;
+
+          for (var j = 0; j < langSpecificPaths.length; j++) {
+            var pathPattern = langSpecificPaths[j];
+            /* Remove existing language prefix and get base path */
+            var cleanHref = href.replace(basePath + '/en' + pathPattern, basePath + pathPattern)
+                                .replace(basePath + '/es' + pathPattern, basePath + pathPattern);
+            if (cleanHref.indexOf(basePath + pathPattern) !== -1 || cleanHref === basePath + pathPattern.slice(0, -1)) {
+              /* Apply new language prefix */
+              var newHref = basePath + langPrefix + pathPattern;
+              navLinks[i].setAttribute('href', newHref);
+              break;
+            }
+          }
+        }
+
+        /* Update home links (avatar and site title) */
+        var homeUrl = basePath + langPrefix + '/';
+        var avatar = document.getElementById('avatar');
+        var siteTitle = document.querySelector('.site-title a');
+        if (avatar) { avatar.setAttribute('href', homeUrl); }
+        if (siteTitle) { siteTitle.setAttribute('href', homeUrl); }
+      }
+
       function updateAllUILabels(lang) {
         updateSidebarLabels(lang);
+        updateSidebarLinks(lang);
         updatePanelLabels(lang);
         updateFooterText(lang);
         updateSearchText(lang);
@@ -347,6 +403,9 @@
 
       /* Language switcher click handler */
       document.addEventListener('DOMContentLoaded', function() {
+        /* Remove FOUC prevention class - page is now ready */
+        document.documentElement.classList.remove('lang-redirect-pending');
+
         var langOptions = document.querySelectorAll('.lang-option');
         var langSwitcher = document.getElementById('lang-switcher');
         var langToggle = document.getElementById('lang-toggle');
