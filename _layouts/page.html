@@ -5,8 +5,13 @@ layout: default
 {% include lang.html %}
 
 <article class="px-1">
-  {% if page.layout == 'page' or page.collection == 'tabs' %}
-    {% assign tab_key = page.title | downcase %}
+  {% if page.layout == 'page' or page.collection == 'tabs' or page.layout == 'categories' or page.layout == 'tags' or page.layout == 'archives' %}
+    {% comment %} Use layout name for tabs (categories, tags, archives) for consistent locale lookup {% endcomment %}
+    {% if page.layout == 'categories' or page.layout == 'tags' or page.layout == 'archives' %}
+      {% assign tab_key = page.layout %}
+    {% else %}
+      {% assign tab_key = page.title | downcase %}
+    {% endif %}
     {% assign title = site.data.locales[lang].tabs[tab_key] | default: page.title %}
     <h1 class="dynamic-title page-title-label" data-tab="{{ tab_key }}" data-ko="{{ site.data.locales['ko-KR'].tabs[tab_key] | default: page.title }}" data-en="{{ site.data.locales['en'].tabs[tab_key] | default: page.title }}" data-es="{{ site.data.locales['es-ES'].tabs[tab_key] | default: page.title }}">
       {{ title }}
