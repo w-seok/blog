@@ -1543,4 +1543,103 @@ test.describe('Multilingual Blog Tests', () => {
       expect(displayedCount).toBe(visiblePosts);
     });
   });
+
+  test.describe('FOUC Prevention - Tab Navigation After Language Change', () => {
+
+    test('English homepage sidebar links point to English tab pages', async ({ page }) => {
+      // Clear any existing settings
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+
+      // Set preferred language to English and navigate to English homepage
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'en'));
+      await page.goto('/en/');
+      await page.waitForLoadState('networkidle');
+
+      // Check sidebar links point to English versions
+      const categoriesLink = await page.locator('.nav-link[href*="categories"]').getAttribute('href');
+      const tagsLink = await page.locator('.nav-link[href*="tags"]').getAttribute('href');
+      const archivesLink = await page.locator('.nav-link[href*="archives"]').getAttribute('href');
+
+      expect(categoriesLink).toContain('/en/categories/');
+      expect(tagsLink).toContain('/en/tags/');
+      expect(archivesLink).toContain('/en/archives/');
+    });
+
+    test('Spanish homepage sidebar links point to Spanish tab pages', async ({ page }) => {
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'es'));
+      await page.goto('/es/');
+      await page.waitForLoadState('networkidle');
+
+      const categoriesLink = await page.locator('.nav-link[href*="categories"]').getAttribute('href');
+      const tagsLink = await page.locator('.nav-link[href*="tags"]').getAttribute('href');
+      const archivesLink = await page.locator('.nav-link[href*="archives"]').getAttribute('href');
+
+      expect(categoriesLink).toContain('/es/categories/');
+      expect(tagsLink).toContain('/es/tags/');
+      expect(archivesLink).toContain('/es/archives/');
+    });
+
+    test('Clicking Categories from English homepage stays on English page without redirect', async ({ page }) => {
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'en'));
+      await page.goto('/en/');
+      await page.waitForLoadState('networkidle');
+
+      // Track navigation events
+      const navigations = [];
+      page.on('framenavigated', frame => {
+        if (frame === page.mainFrame()) {
+          navigations.push(frame.url());
+        }
+      });
+
+      // Click on Categories link
+      await page.locator('.nav-link[href*="categories"]').click();
+      await page.waitForLoadState('networkidle');
+
+      // Should navigate directly to /en/categories/ without intermediate redirect
+      expect(page.url()).toContain('/en/categories/');
+
+      // Should have only ONE navigation (direct to /en/categories/)
+      // Not two (first to /categories/, then redirect to /en/categories/)
+      const categoriesNavigations = navigations.filter(url => url.includes('categories'));
+      expect(categoriesNavigations.length,
+        `Expected 1 navigation to categories but got ${categoriesNavigations.length}: ${categoriesNavigations.join(' -> ')}`
+      ).toBe(1);
+    });
+
+    test('Categories page shows English content immediately without Korean flash', async ({ page }) => {
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'en'));
+
+      // Navigate directly to English categories page
+      await page.goto('/en/categories/');
+      await page.waitForLoadState('domcontentloaded');
+
+      // Check page title immediately after DOM is loaded (before full networkidle)
+      const pageTitle = await page.locator('.page-title-label, .dynamic-title, h1').first().textContent();
+
+      // The title should NOT be Korean ("카테고리") - it should be "Categories" for English
+      const hasKorean = /[\uAC00-\uD7AF]/.test(pageTitle);
+      expect(hasKorean,
+        `Page title contains Korean text on English categories page: "${pageTitle}"`
+      ).toBe(false);
+    });
+  });
 });
