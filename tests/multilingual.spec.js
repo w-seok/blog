@@ -1546,6 +1546,61 @@ test.describe('Multilingual Blog Tests', () => {
 
   test.describe('FOUC Prevention - Tab Navigation After Language Change', () => {
 
+    test('First visit from Korean homepage: change to English then click Categories - no FOUC', async ({ page }) => {
+      // 1. 최초 접속 시뮬레이션 - 한국어 홈페이지에서 시작
+      await page.goto('/');
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+      // 한국어로 강제 설정하고 한국어 홈페이지로 이동
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.goto('/');
+      await page.waitForLoadState('networkidle');
+
+      // 한국어 홈페이지에서 시작
+      const initialUrl = page.url();
+      console.log('Initial URL:', initialUrl);
+      expect(initialUrl).not.toContain('/en/');
+      expect(initialUrl).not.toContain('/es/');
+
+      // 2. 언어를 영어로 변경
+      await page.locator('#lang-toggle').click();
+      await page.locator('.lang-option[data-lang="en"]').click();
+      await page.waitForURL(/\/en\//);
+      await page.waitForLoadState('networkidle');
+
+      // 영어 홈페이지로 이동했어야 함
+      expect(page.url()).toContain('/en/');
+      console.log('After lang change URL:', page.url());
+
+      // 3. Categories 링크 href 확인 (영어 버전이어야 함)
+      const categoriesHref = await page.locator('.nav-link[href*="categories"]').getAttribute('href');
+      console.log('Categories href before click:', categoriesHref);
+      expect(categoriesHref).toContain('/en/categories/');
+
+      // 4. Categories 클릭
+      await page.locator('.nav-link[href*="categories"]').click();
+      await page.waitForLoadState('domcontentloaded');
+
+      // DOM 로드 직후 확인 - 한국어가 보이면 안됨 (FOUC)
+      const titleAfterClick = await page.locator('h1').first().textContent();
+      const homeLabelAfterClick = await page.locator('.nav-item .nav-link span').first().textContent();
+
+      console.log('Title after click (domcontentloaded):', titleAfterClick);
+      console.log('Home label after click (domcontentloaded):', homeLabelAfterClick);
+
+      // 한국어가 포함되어 있으면 FOUC 발생
+      const hasKoreanInTitle = /[\uAC00-\uD7AF]/.test(titleAfterClick);
+      const hasKoreanInLabel = /[\uAC00-\uD7AF]/.test(homeLabelAfterClick);
+
+      expect(hasKoreanInTitle, `FOUC! Title contains Korean: "${titleAfterClick}"`).toBe(false);
+      expect(hasKoreanInLabel, `FOUC! Home label contains Korean: "${homeLabelAfterClick}"`).toBe(false);
+
+      // URL도 영어 버전이어야 함
+      expect(page.url()).toContain('/en/categories/');
+    });
+
     test('English homepage sidebar links point to English tab pages', async ({ page }) => {
       // Clear any existing settings
       await page.evaluate(() => {
