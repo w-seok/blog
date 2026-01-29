@@ -9,11 +9,11 @@ layout: page
   <h1 class="ps-lg-2">
     <i class="fa fa-tag fa-fw text-muted"></i>
     {{ page.title }}
-    <span class="lead text-muted ps-2">{{ page.posts | size }}</span>
+    <span id="tag-post-count" class="lead text-muted ps-2">{{ page.posts | size }}</span>
   </h1>
-  <ul class="content ps-0">
+  <ul class="content ps-0" id="tag-posts">
     {% for post in page.posts %}
-      <li class="d-flex justify-content-between px-md-3" data-lang="{{ post.lang | default: 'ko-KR' }}">
+      <li class="d-flex justify-content-between px-md-3 tag-post-item" data-locale="{{ post.locale | default: 'ko' }}">
         <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
         <span class="dash flex-grow-1"></span>
         {% include datetime.html date=post.date class='text-muted small text-nowrap' lang=lang %}
@@ -21,3 +21,32 @@ layout: page
     {% endfor %}
   </ul>
 </div>
+
+<style>
+  .tag-post-item.hidden { display: none !important; }
+</style>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var lang = (window.langUtils && window.langUtils.getDisplayLang)
+      ? window.langUtils.getDisplayLang()
+      : (localStorage.getItem('preferred-lang') || 'ko');
+
+    var items = document.querySelectorAll('.tag-post-item');
+    var visibleCount = 0;
+
+    for (var i = 0; i < items.length; i++) {
+      var itemLocale = items[i].getAttribute('data-locale');
+      if (itemLocale === lang) {
+        items[i].classList.remove('hidden');
+        visibleCount++;
+      } else {
+        items[i].classList.add('hidden');
+      }
+    }
+
+    var countEl = document.getElementById('tag-post-count');
+    if (countEl) {
+      countEl.textContent = visibleCount;
+    }
+  });
+</script>

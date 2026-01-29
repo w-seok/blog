@@ -1,7 +1,7 @@
 <!-- Post sharing snippet -->
 
 <div class="share-wrapper d-flex align-items-center">
-  <span class="share-label text-muted">{{ site.data.locales[include.lang].post.share }}</span>
+  <span class="share-label text-muted post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.share }}" data-en="{{ site.data.locales['en'].post.share }}" data-es="{{ site.data.locales['es-ES'].post.share }}">{{ site.data.locales[include.lang].post.share }}</span>
   <span class="share-icons">
     {% capture title %}{{ page.title }} - {{ site.title }}{% endcapture %}
     {% assign title = title | uri_escape %}
@@ -45,6 +45,12 @@
       data-bs-placement="top"
       title="{{ site.data.locales[include.lang].post.button.share_link.title }}"
       data-title-succeed="{{ site.data.locales[include.lang].post.button.share_link.succeed }}"
+      data-title-ko="{{ site.data.locales['ko-KR'].post.button.share_link.title }}"
+      data-title-en="{{ site.data.locales['en'].post.button.share_link.title }}"
+      data-title-es="{{ site.data.locales['es-ES'].post.button.share_link.title }}"
+      data-succeed-ko="{{ site.data.locales['ko-KR'].post.button.share_link.succeed }}"
+      data-succeed-en="{{ site.data.locales['en'].post.button.share_link.succeed }}"
+      data-succeed-es="{{ site.data.locales['es-ES'].post.button.share_link.succeed }}"
     >
       <i class="fa-fw fas fa-link pe-none fs-6"></i>
     </button>

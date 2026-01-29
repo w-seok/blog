@@ -1263,4 +1263,284 @@ test.describe('Multilingual Blog Tests', () => {
       expect(body).toMatch(/<loc>[^<]*\/es\/<\/loc>/); // Spanish homepage
     });
   });
+
+  test.describe('Post Page Category/Tag Links', () => {
+
+    test('English post page has category links with /en/ prefix', async ({ page }) => {
+      await page.goto('/en/');
+      const firstPostLink = await page.locator('.card-wrapper a').first().getAttribute('href');
+      await page.goto(firstPostLink);
+
+      const categoryLinks = await page.locator('[data-category-link]').all();
+      if (categoryLinks.length > 0) {
+        const href = await categoryLinks[0].getAttribute('href');
+        expect(href).toContain('/en/categories/');
+      }
+    });
+
+    test('Spanish post page has tag links with /es/ prefix', async ({ page }) => {
+      await page.goto('/es/');
+      const firstPostLink = await page.locator('.card-wrapper a').first().getAttribute('href');
+      await page.goto(firstPostLink);
+
+      const tagLinks = await page.locator('[data-tag-link]').all();
+      if (tagLinks.length > 0) {
+        const href = await tagLinks[0].getAttribute('href');
+        expect(href).toContain('/es/tags/');
+      }
+    });
+
+    test('Korean post page has category links without language prefix', async ({ page }) => {
+      // Set Korean preference explicitly
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.goto('/');
+
+      // Get a Korean post (URL should not contain /en/ or /es/)
+      const postLinks = await page.locator('.card-wrapper a').all();
+      let koreanPostLink = null;
+      for (const link of postLinks) {
+        const href = await link.getAttribute('href');
+        if (href && !href.includes('/en/') && !href.includes('/es/')) {
+          koreanPostLink = href;
+          break;
+        }
+      }
+
+      if (koreanPostLink) {
+        await page.goto(koreanPostLink);
+
+        const categoryLinks = await page.locator('[data-category-link]').all();
+        if (categoryLinks.length > 0) {
+          const href = await categoryLinks[0].getAttribute('href');
+          expect(href).not.toContain('/en/');
+          expect(href).not.toContain('/es/');
+          expect(href).toContain('/categories/');
+        }
+      }
+    });
+  });
+
+  test.describe('Trending Tags Links', () => {
+
+    test('English homepage has trending tags with /en/ prefix', async ({ page }) => {
+      await page.goto('/en/');
+
+      const trendingTags = await page.locator('[data-trending-tag]').all();
+      if (trendingTags.length > 0) {
+        const href = await trendingTags[0].getAttribute('href');
+        expect(href).toContain('/en/tags/');
+      }
+    });
+
+    test('Spanish homepage has trending tags with /es/ prefix', async ({ page }) => {
+      await page.goto('/es/');
+
+      const trendingTags = await page.locator('[data-trending-tag]').all();
+      if (trendingTags.length > 0) {
+        const href = await trendingTags[0].getAttribute('href');
+        expect(href).toContain('/es/tags/');
+      }
+    });
+
+    test('Korean homepage has trending tags without language prefix', async ({ page }) => {
+      await page.goto('/');
+
+      const trendingTags = await page.locator('[data-trending-tag]').all();
+      if (trendingTags.length > 0) {
+        const href = await trendingTags[0].getAttribute('href');
+        expect(href).not.toContain('/en/');
+        expect(href).not.toContain('/es/');
+        expect(href).toContain('/tags/');
+      }
+    });
+  });
+
+  test.describe('URL-based Language Detection (Categories/Tags pages)', () => {
+
+    test('/en/categories/ shows English filtered content', async ({ page }) => {
+      // Set Korean preference but visit English URL
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.goto('/en/categories/');
+      await page.waitForLoadState('domcontentloaded');
+
+      // Should filter by URL language (en), not localStorage (ko)
+      const visibleCards = await page.locator('.category-card:visible').all();
+      expect(visibleCards.length).toBeGreaterThan(0);
+    });
+
+    test('/es/tags/ shows Spanish filtered content', async ({ page }) => {
+      // Set Korean preference but visit Spanish URL
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.goto('/es/tags/');
+      await page.waitForLoadState('domcontentloaded');
+
+      // Should filter by URL language (es), not localStorage (ko)
+      const visibleTags = await page.locator('.tag-wrapper:visible').all();
+      expect(visibleTags.length).toBeGreaterThan(0);
+    });
+  });
+
+  test.describe('Post Meta Labels Language', () => {
+
+    test('English post shows English meta labels', async ({ page }) => {
+      await page.goto('/en/');
+      const firstPostLink = await page.locator('.card-wrapper a').first().getAttribute('href');
+      await page.goto(firstPostLink);
+
+      // Check for "Posted" label (English)
+      const postedLabel = await page.locator('.post-meta-label').first().textContent();
+      expect(postedLabel.toLowerCase()).toContain('posted');
+    });
+
+    test('Spanish post shows Spanish meta labels', async ({ page }) => {
+      await page.goto('/es/');
+      const firstPostLink = await page.locator('.card-wrapper a').first().getAttribute('href');
+      await page.goto(firstPostLink);
+
+      // Check for "Publicado" label (Spanish)
+      const postedLabel = await page.locator('.post-meta-label').first().textContent();
+      expect(postedLabel.toLowerCase()).toContain('publicado');
+    });
+
+    test('Korean post shows Korean meta labels', async ({ page }) => {
+      // Set Korean preference explicitly
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.goto('/');
+
+      // Get a Korean post (URL should not contain /en/ or /es/)
+      const postLinks = await page.locator('.card-wrapper a').all();
+      let koreanPostLink = null;
+      for (const link of postLinks) {
+        const href = await link.getAttribute('href');
+        if (href && !href.includes('/en/') && !href.includes('/es/')) {
+          koreanPostLink = href;
+          break;
+        }
+      }
+
+      if (koreanPostLink) {
+        await page.goto(koreanPostLink);
+
+        // Check for Korean label
+        const postedLabel = await page.locator('.post-meta-label').first().textContent();
+        // Korean "게시" should be present
+        expect(postedLabel).toContain('게시');
+      }
+    });
+  });
+
+  test.describe('Individual Category Page Language Filtering', () => {
+
+    test('Category page filters posts by user preferred language (Korean)', async ({ page }) => {
+      // Navigate first, then set localStorage and reload
+      await page.goto('/categories/java/');
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+
+      // Wait for JS filtering to complete by checking a Korean post is visible
+      await page.waitForSelector('.category-post-item[data-locale="ko"]:visible', { timeout: 5000 });
+
+      // Get all visible post items
+      const visiblePosts = await page.locator('.category-post-item:visible').all();
+
+      for (const post of visiblePosts) {
+        const locale = await post.getAttribute('data-locale');
+        expect(locale, 'Category page should only show Korean posts when preferred-lang is ko').toBe('ko');
+      }
+    });
+
+    test('Category page filters posts by user preferred language (English)', async ({ page }) => {
+      // Navigate first, then set localStorage and reload
+      await page.goto('/categories/java/');
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'en'));
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+
+      // Wait for JS filtering to complete
+      await page.waitForSelector('.category-post-item[data-locale="en"]:visible', { timeout: 5000 });
+
+      const visiblePosts = await page.locator('.category-post-item:visible').all();
+
+      for (const post of visiblePosts) {
+        const locale = await post.getAttribute('data-locale');
+        expect(locale, 'Category page should only show English posts when preferred-lang is en').toBe('en');
+      }
+    });
+
+    test('Category page updates post count based on filtered language', async ({ page }) => {
+      // Navigate first, then set localStorage and reload
+      await page.goto('/categories/java/');
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+
+      // Wait for JS filtering to complete
+      await page.waitForSelector('.category-post-item[data-locale="ko"]:visible', { timeout: 5000 });
+
+      const countText = await page.locator('#category-post-count').textContent();
+      const displayedCount = parseInt(countText, 10);
+
+      const visiblePosts = await page.locator('.category-post-item:visible').count();
+
+      expect(displayedCount).toBe(visiblePosts);
+    });
+  });
+
+  test.describe('Individual Tag Page Language Filtering', () => {
+
+    test('Tag page filters posts by user preferred language (Korean)', async ({ page }) => {
+      // Navigate first, then set localStorage and reload
+      await page.goto('/tags/java/');
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+
+      // Wait for JS filtering to complete
+      await page.waitForSelector('.tag-post-item[data-locale="ko"]:visible', { timeout: 5000 });
+
+      const visiblePosts = await page.locator('.tag-post-item:visible').all();
+
+      for (const post of visiblePosts) {
+        const locale = await post.getAttribute('data-locale');
+        expect(locale, 'Tag page should only show Korean posts when preferred-lang is ko').toBe('ko');
+      }
+    });
+
+    test('Tag page filters posts by user preferred language (English)', async ({ page }) => {
+      // Navigate first, then set localStorage and reload
+      await page.goto('/tags/java/');
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'en'));
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+
+      // Wait for JS filtering to complete
+      await page.waitForSelector('.tag-post-item[data-locale="en"]:visible', { timeout: 5000 });
+
+      const visiblePosts = await page.locator('.tag-post-item:visible').all();
+
+      for (const post of visiblePosts) {
+        const locale = await post.getAttribute('data-locale');
+        expect(locale, 'Tag page should only show English posts when preferred-lang is en').toBe('en');
+      }
+    });
+
+    test('Tag page updates post count based on filtered language', async ({ page }) => {
+      // Navigate first, then set localStorage and reload
+      await page.goto('/tags/java/');
+      await page.evaluate(() => localStorage.setItem('preferred-lang', 'ko'));
+      await page.reload();
+      await page.waitForLoadState('networkidle');
+
+      // Wait for JS filtering to complete
+      await page.waitForSelector('.tag-post-item[data-locale="ko"]:visible', { timeout: 5000 });
+
+      const countText = await page.locator('#tag-post-count').textContent();
+      const displayedCount = parseInt(countText, 10);
+
+      const visiblePosts = await page.locator('.tag-post-item:visible').count();
+
+      expect(displayedCount).toBe(visiblePosts);
+    });
+  });
 });

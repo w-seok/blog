@@ -71,7 +71,7 @@
 
 {% if relate_posts.size > 0 %}
   <aside id="related-posts" aria-labelledby="related-label">
-    <h3 class="mb-4" id="related-label">
+    <h3 class="mb-4 post-meta-label" id="related-label" data-ko="{{ site.data.locales['ko-KR'].post.relate_posts }}" data-en="{{ site.data.locales['en'].post.relate_posts }}" data-es="{{ site.data.locales['es-ES'].post.relate_posts }}">
       {{- site.data.locales[include.lang].post.relate_posts -}}
     </h3>
     <nav class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-4">

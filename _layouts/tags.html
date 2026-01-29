@@ -26,7 +26,10 @@ layout: page
 <script>
 (function() {
   function filterTagsByLang() {
-    var lang = localStorage.getItem('preferred-lang') || 'ko';
+    /* langUtils.getDisplayLang()를 사용하여 URL 기반 언어 감지 우선 */
+    var lang = (window.langUtils && window.langUtils.getDisplayLang)
+      ? window.langUtils.getDisplayLang()
+      : (localStorage.getItem('preferred-lang') || 'ko');
     var tagItems = document.querySelectorAll('#tags .tag-item');
     var tagCounts = {};
 

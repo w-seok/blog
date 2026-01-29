@@ -23,15 +23,19 @@
   data-bs-toggle="tooltip"
   data-bs-placement="bottom"
   title="{{ words }} {{ site.data.locales[include.lang].post.words }}"
+  data-words="{{ words }}"
+  data-words-ko="{{ site.data.locales['ko-KR'].post.words }}"
+  data-words-en="{{ site.data.locales['en'].post.words }}"
+  data-words-es="{{ site.data.locales['es-ES'].post.words }}"
 >
   <em>
     {{- read_time -}}
     {{ ' ' }}
-    {{- site.data.locales[include.lang].post.read_time.unit -}}
+    <span class="post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.read_time.unit }}" data-en="{{ site.data.locales['en'].post.read_time.unit }}" data-es="{{ site.data.locales['es-ES'].post.read_time.unit }}">{{- site.data.locales[include.lang].post.read_time.unit -}}</span>
   </em>
   {%- if include.prompt -%}
     {%- assign _prompt_words = read_prompt | number_of_words: 'auto' -%}
     {%- unless _prompt_words > 1 -%}{{ ' ' }}{%- endunless -%}
-    {{ read_prompt }}
+    <span class="post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.read_time.prompt }}" data-en="{{ site.data.locales['en'].post.read_time.prompt }}" data-es="{{ site.data.locales['es-ES'].post.read_time.prompt }}">{{ read_prompt }}</span>
   {%- endif -%}
 </span>

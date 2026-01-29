@@ -390,6 +390,88 @@
         if (siteTitle) { siteTitle.setAttribute('href', homeUrl); }
       }
 
+      /* Update post meta labels (Posted, Updated, Written by, etc.) by language */
+      function updatePostMetaLabels(lang) {
+        var metaLabels = document.querySelectorAll('.post-meta-label');
+        for (var i = 0; i < metaLabels.length; i++) {
+          var labelText = metaLabels[i].getAttribute('data-' + lang);
+          if (labelText) {
+            metaLabels[i].textContent = labelText;
+          }
+        }
+
+        /* Update readtime tooltip */
+        var readtime = document.querySelector('.readtime');
+        if (readtime) {
+          var words = readtime.getAttribute('data-words');
+          var wordsLabel = readtime.getAttribute('data-words-' + lang);
+          if (words && wordsLabel) {
+            readtime.setAttribute('title', words + ' ' + wordsLabel);
+          }
+        }
+
+        /* Update copy-link button tooltip */
+        var copyLink = document.getElementById('copy-link');
+        if (copyLink) {
+          var titleText = copyLink.getAttribute('data-title-' + lang);
+          var succeedText = copyLink.getAttribute('data-succeed-' + lang);
+          if (titleText) { copyLink.setAttribute('title', titleText); }
+          if (succeedText) { copyLink.setAttribute('data-title-succeed', succeedText); }
+        }
+
+        /* Update license text */
+        var licenseText = document.querySelector('.license-text');
+        if (licenseText) {
+          var text = licenseText.getAttribute('data-' + lang);
+          if (text) {
+            /* Decode HTML entities */
+            var decoded = text.replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+            licenseText.innerHTML = decoded;
+          }
+        }
+      }
+
+      /* Update post category/tag links with language prefix */
+      function updatePostLinks(lang) {
+        var basePath = getBasePath();
+        var langPrefix = (lang === 'ko') ? '' : '/' + lang;
+
+        /* Update category links in post page */
+        var categoryLinks = document.querySelectorAll('[data-category-link]');
+        for (var i = 0; i < categoryLinks.length; i++) {
+          var href = categoryLinks[i].getAttribute('href');
+          if (!href) continue;
+          /* Remove existing language prefix */
+          var cleanHref = href.replace(basePath + '/en/categories/', basePath + '/categories/')
+                              .replace(basePath + '/es/categories/', basePath + '/categories/');
+          /* Apply new language prefix */
+          var newHref = cleanHref.replace(basePath + '/categories/', basePath + langPrefix + '/categories/');
+          categoryLinks[i].setAttribute('href', newHref);
+        }
+
+        /* Update tag links in post page */
+        var tagLinks = document.querySelectorAll('[data-tag-link]');
+        for (var j = 0; j < tagLinks.length; j++) {
+          var href = tagLinks[j].getAttribute('href');
+          if (!href) continue;
+          var cleanHref = href.replace(basePath + '/en/tags/', basePath + '/tags/')
+                              .replace(basePath + '/es/tags/', basePath + '/tags/');
+          var newHref = cleanHref.replace(basePath + '/tags/', basePath + langPrefix + '/tags/');
+          tagLinks[j].setAttribute('href', newHref);
+        }
+
+        /* Update trending tags links */
+        var trendingTags = document.querySelectorAll('[data-trending-tag]');
+        for (var k = 0; k < trendingTags.length; k++) {
+          var href = trendingTags[k].getAttribute('href');
+          if (!href) continue;
+          var cleanHref = href.replace(basePath + '/en/tags/', basePath + '/tags/')
+                              .replace(basePath + '/es/tags/', basePath + '/tags/');
+          var newHref = cleanHref.replace(basePath + '/tags/', basePath + langPrefix + '/tags/');
+          trendingTags[k].setAttribute('href', newHref);
+        }
+      }
+
       function updateAllUILabels(lang) {
         updateSidebarLabels(lang);
         updateSidebarLinks(lang);
@@ -399,6 +481,8 @@
         updateBreadcrumbText(lang);
         updatePageTitle(lang);
         filterUpdateListByLang(lang);
+        updatePostLinks(lang);
+        updatePostMetaLabels(lang);
       }
 
       /* Language switcher click handler */

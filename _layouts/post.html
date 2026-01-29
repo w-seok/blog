@@ -21,14 +21,14 @@ tail_includes:
     <div class="post-meta text-muted">
       <!-- published date -->
       <span>
-        {{ site.data.locales[lang].post.posted }}
+        <span class="post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.posted }}" data-en="{{ site.data.locales['en'].post.posted }}" data-es="{{ site.data.locales['es-ES'].post.posted }}">{{ site.data.locales[lang].post.posted }}</span>
         {% include datetime.html date=page.date tooltip=true lang=lang %}
       </span>
 
       <!-- lastmod date -->
       {% if page.last_modified_at and page.last_modified_at != page.date %}
         <span>
-          {{ site.data.locales[lang].post.updated }}
+          <span class="post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.updated }}" data-en="{{ site.data.locales['en'].post.updated }}" data-es="{{ site.data.locales['es-ES'].post.updated }}">{{ site.data.locales[lang].post.updated }}</span>
           {% include datetime.html date=page.last_modified_at tooltip=true lang=lang %}
         </span>
       {% endif %}
@@ -59,7 +59,7 @@ tail_includes:
             {% assign authors = page.authors %}
           {% endif %}
 
-          {{ site.data.locales[lang].post.written_by }}
+          <span class="post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.written_by }}" data-en="{{ site.data.locales['en'].post.written_by }}" data-es="{{ site.data.locales['es-ES'].post.written_by }}">{{ site.data.locales[lang].post.written_by }}</span>
 
           <em>
             {% if authors %}
@@ -84,7 +84,7 @@ tail_includes:
               <em id="pageviews">
                 <i class="fas fa-spinner fa-spin small"></i>
               </em>
-              {{ site.data.locales[lang].post.pageview_measure }}
+              <span class="post-meta-label" data-ko="{{ site.data.locales['ko-KR'].post.pageview_measure }}" data-en="{{ site.data.locales['en'].post.pageview_measure }}" data-es="{{ site.data.locales['es-ES'].post.pageview_measure }}">{{ site.data.locales[lang].post.pageview_measure }}</span>
             </span>
           {% endif %}
 
@@ -102,10 +102,10 @@ tail_includes:
   <div class="post-tail-wrapper text-muted">
     <!-- categories -->
     {% if page.categories.size > 0 %}
-      <div class="post-meta mb-3">
+      <div class="post-meta mb-3 post-categories-links">
         <i class="far fa-folder-open fa-fw me-1"></i>
         {% for category in page.categories %}
-          <a href="{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/">{{ category }}</a>
+          <a href="{{ site.baseurl }}/categories/{{ category | slugify | url_encode }}/" data-category-link>{{ category }}</a>
           {%- unless forloop.last -%},{%- endunless -%}
         {% endfor %}
       </div>
@@ -113,12 +113,13 @@ tail_includes:
 
     <!-- tags -->
     {% if page.tags.size > 0 %}
-      <div class="post-tags">
+      <div class="post-tags post-tags-links">
         <i class="fa fa-tags fa-fw me-1"></i>
         {% for tag in page.tags %}
           <a
             href="{{ site.baseurl }}/tags/{{ tag | slugify | url_encode }}/"
             class="post-tag no-text-decoration"
+            data-tag-link
           >
             {{- tag -}}
           </a>
@@ -140,7 +141,15 @@ tail_includes:
         </a>
         {% endcapture %}
 
-          {{ site.data.locales[lang].copyright.license.template | replace: ':LICENSE_NAME', _replacement }}
+          {% capture _ko_replacement %}<a href="{{ site.data.locales['ko-KR'].copyright.license.link }}">{{ site.data.locales['ko-KR'].copyright.license.name }}</a>{% endcapture %}
+          {% capture _en_replacement %}<a href="{{ site.data.locales['en'].copyright.license.link }}">{{ site.data.locales['en'].copyright.license.name }}</a>{% endcapture %}
+          {% capture _es_replacement %}<a href="{{ site.data.locales['es-ES'].copyright.license.link }}">{{ site.data.locales['es-ES'].copyright.license.name }}</a>{% endcapture %}
+
+          <span class="license-text"
+            data-ko="{{ site.data.locales['ko-KR'].copyright.license.template | replace: ':LICENSE_NAME', _ko_replacement | xml_escape }}"
+            data-en="{{ site.data.locales['en'].copyright.license.template | replace: ':LICENSE_NAME', _en_replacement | xml_escape }}"
+            data-es="{{ site.data.locales['es-ES'].copyright.license.template | replace: ':LICENSE_NAME', _es_replacement | xml_escape }}"
+          >{{ site.data.locales[lang].copyright.license.template | replace: ':LICENSE_NAME', _replacement }}</span>
         {% endif %}
       </div>
 
