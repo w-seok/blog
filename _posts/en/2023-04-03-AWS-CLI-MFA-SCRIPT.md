@@ -6,6 +6,21 @@ categories: [Programming, SHELL]
 tags: [AWS, Shell, MFA]
 author: w-seok
 lang: en
+howto:
+  name: "How to Set Up AWS CLI MFA Authentication Automation Script"
+  description: "How to write and execute a shell script that automates MFA authentication in AWS CLI"
+  totalTime: "PT10M"
+  steps:
+    - name: "Prepare Required Settings"
+      text: "Prepare values for aws_access_key_id, aws_secret_access_key, aws_region, arn_number, duration_time."
+    - name: "Create Script File"
+      text: "Save the above code as aws_login.sh file and input the settings."
+    - name: "Grant Execution Permission"
+      text: "Grant execution permission with chmod +x aws_login.sh command."
+    - name: "Execute Script with MFA Token"
+      text: "Execute by passing MFA token value as parameter like ./aws_login.sh 123456."
+    - name: "Use AWS CLI"
+      text: "After authentication, use commands like aws s3 ls --profile {myProfile}."
 ---
 Introduction
 ---

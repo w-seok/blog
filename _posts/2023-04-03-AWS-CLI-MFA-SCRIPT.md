@@ -6,6 +6,21 @@ categories: [Programming, SHELL]
 tags: [AWS, Shell, MFA]
 author: w-seok
 lang: ko-KR
+howto:
+  name: "AWS CLI MFA 인증 자동화 스크립트 설정 방법"
+  description: "AWS CLI에서 MFA 인증을 자동화하는 쉘 스크립트를 작성하고 실행하는 방법"
+  totalTime: "PT10M"
+  steps:
+    - name: "필수 설정값 준비"
+      text: "aws_access_key_id, aws_secret_access_key, aws_region, arn_number, duration_time 값을 준비합니다."
+    - name: "스크립트 파일 생성"
+      text: "위 코드를 aws_login.sh 파일로 저장하고 설정값들을 입력합니다."
+    - name: "실행 권한 부여"
+      text: "chmod +x aws_login.sh 명령으로 실행 권한을 부여합니다."
+    - name: "MFA 토큰으로 스크립트 실행"
+      text: "./aws_login.sh 123456 형태로 MFA 토큰값을 파라미터로 전달하여 실행합니다."
+    - name: "AWS CLI 사용"
+      text: "인증 완료 후 aws s3 ls --profile {myProfile} 등의 명령어를 사용합니다."
 ---
 서두
 ---

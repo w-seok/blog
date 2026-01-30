@@ -1,5 +1,27 @@
 <!-- JSON-LD Structured Data for SEO/GEO/AEO -->
 {% assign page_lang = page.lang | default: site.lang | default: 'ko-KR' %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "{{ site.url }}{{ site.baseurl }}/#author",
+  "name": "{{ site.social.name }}",
+  "url": "{{ site.url }}{{ site.baseurl }}/",
+  "image": "{{ site.url }}{{ site.baseurl }}/assets/img/profile.webp",
+  "email": "{{ site.social.email }}",
+  "jobTitle": "Backend Developer",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Cupix"
+  },
+  "sameAs": [
+    "{{ site.social.links | join: '", "' }}"
+  ],
+  "knowsAbout": ["Java", "Spring", "AWS", "Backend Development", "Database"]
+}
+</script>
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -8,9 +30,7 @@
   "description": "{{ site.description }}",
   "url": "{{ site.url }}{{ site.baseurl }}/",
   "author": {
-    "@type": "Person",
-    "name": "{{ site.social.name }}",
-    "url": "{{ site.social.links[0] }}"
+    "@id": "{{ site.url }}{{ site.baseurl }}/#author"
   },
   "inLanguage": "{{ page_lang }}",
   "availableLanguage": ["ko-KR", "en", "es-ES"]
@@ -27,20 +47,18 @@
   "datePublished": "{{ page.date | date_to_xmlschema }}",
   "dateModified": "{{ page.last_modified_at | default: page.date | date_to_xmlschema }}",
   "author": {
-    "@type": "Person",
-    "name": "{{ site.social.name }}",
-    "url": "{{ site.social.links[0] }}"
+    "@id": "{{ site.url }}{{ site.baseurl }}/#author"
   },
   "publisher": {
-    "@type": "Person",
-    "name": "{{ site.social.name }}"
+    "@id": "{{ site.url }}{{ site.baseurl }}/#author"
   },
   "mainEntityOfPage": {
     "@type": "WebPage",
     "@id": "{{ page.url | absolute_url }}"
   },
   "url": "{{ page.url | absolute_url }}",
-  "inLanguage": "{{ page_lang }}"
+  "inLanguage": "{{ page_lang }}",
+  "image": "{% if page.image %}{{ page.image.path | default: page.image | absolute_url }}{% else %}{{ site.url }}{{ site.baseurl }}/assets/img/profile.webp{% endif %}"
   {% if page.categories.size > 0 %},
   "articleSection": "{{ page.categories | first }}"
   {% endif %}
@@ -94,10 +112,9 @@
   "description": "{{ site.description }}",
   "url": "{{ site.url }}{{ site.baseurl }}/",
   "author": {
-    "@type": "Person",
-    "name": "{{ site.social.name }}",
-    "url": "{{ site.social.links[0] }}"
+    "@id": "{{ site.url }}{{ site.baseurl }}/#author"
   },
+  "image": "{{ site.url }}{{ site.baseurl }}/assets/img/profile.webp",
   "inLanguage": "{{ page_lang }}",
   "availableLanguage": ["ko-KR", "en", "es-ES"]
 }

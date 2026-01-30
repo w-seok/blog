@@ -6,6 +6,13 @@ categories: [Issue]
 tags: [Issue, Pageable, Spring, Java]
 author: w-seok
 lang: ko-KR
+faq:
+  - question: "Pageable에서 page 값을 int 범위 초과로 입력하면 왜 오류가 발생하지 않나요?"
+    answer: "Spring의 PageableHandlerMethodArgumentResolverSupport 클래스가 NumberFormatException을 catch하여 기본값 0을 반환하도록 설계되어 있기 때문입니다."
+  - question: "@RequestParam으로 직접 구현하면 왜 오류가 발생하나요?"
+    answer: "@RequestParam은 별도의 예외 처리 없이 int 변환을 시도하므로, int 범위 초과 시 HandlerExceptionResolver에서 400 Bad Request 오류가 발생합니다."
+  - question: "이 동작을 커스터마이징할 수 있나요?"
+    answer: "PageableHandlerMethodArgumentResolver를 커스텀하거나, @Valid와 함께 커스텀 validator를 사용하여 page 값 범위를 제한할 수 있습니다."
 ---
 
 ## 상황 발생 환경

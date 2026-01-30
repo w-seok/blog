@@ -3,29 +3,138 @@ layout: null
 sitemap: false
 ---
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
 
-  {% comment %} Homepage - all languages {% endcomment %}
+  {% comment %} Homepage - with hreflang {% endcomment %}
   <url>
     <loc>{{ site.url }}{{ site.baseurl }}/</loc>
     <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/" />
   </url>
   <url>
     <loc>{{ site.url }}{{ site.baseurl }}/en/</loc>
     <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/" />
   </url>
   <url>
     <loc>{{ site.url }}{{ site.baseurl }}/es/</loc>
     <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/" />
   </url>
 
-  {% comment %} Posts - all language versions {% endcomment %}
+  {% comment %} Archives - with hreflang {% endcomment %}
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/archives/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/archives/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/archives/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/en/archives/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/archives/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/archives/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/es/archives/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/archives/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/archives/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+  </url>
+
+  {% comment %} Categories index - with hreflang {% endcomment %}
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/categories/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/en/categories/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/es/categories/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+  </url>
+
+  {% comment %} Tags index - with hreflang {% endcomment %}
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/tags/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/en/tags/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/es/tags/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+  </url>
+
+  {% comment %} Posts - all language versions with hreflang {% endcomment %}
   {% assign ko_posts = site.posts | where: "locale", "ko" %}
   {% for post in ko_posts %}
   {% assign post_slug = post.url | split: '/posts/' | last | split: '/' | first %}
@@ -34,50 +143,115 @@ sitemap: false
     <lastmod>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
   </url>
   <url>
     <loc>{{ site.url }}{{ site.baseurl }}/en/posts/{{ post_slug }}/</loc>
     <lastmod>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
   </url>
   <url>
     <loc>{{ site.url }}{{ site.baseurl }}/es/posts/{{ post_slug }}/</loc>
     <lastmod>{{ post.last_modified_at | default: post.date | date_to_xmlschema }}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/posts/{{ post_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
   </url>
   {% endfor %}
 
-  {% comment %} Static pages {% endcomment %}
-  {% for page in site.pages %}
-  {% if page.sitemap != false and page.url != '/sitemap.xml' and page.url != '/robots.txt' and page.url != '/feed.xml' %}
-  {% unless page.url contains '/en/' or page.url contains '/es/' or page.url contains '/page/' %}
+  {% comment %} Static pages (about, privacy) - no language variants {% endcomment %}
   <url>
-    <loc>{{ site.url }}{{ site.baseurl }}{{ page.url | remove: 'index.html' }}</loc>
-    <lastmod>{{ page.last_modified_at | default: site.time | date_to_xmlschema }}</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>{{ site.url }}{{ site.baseurl }}/about/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
-  {% endunless %}
-  {% endif %}
-  {% endfor %}
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/privacy/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
 
-  {% comment %} Categories {% endcomment %}
+  {% comment %} Individual category pages - all languages with hreflang {% endcomment %}
   {% for category in site.categories %}
+  {% assign cat_slug = category[0] | slugify %}
   <url>
-    <loc>{{ site.url }}{{ site.baseurl }}/categories/{{ category[0] | slugify }}/</loc>
+    <loc>{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/en/categories/{{ cat_slug }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/es/categories/{{ cat_slug }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/{{ cat_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
   </url>
   {% endfor %}
 
-  {% comment %} Tags {% endcomment %}
+  {% comment %} Individual tag pages - all languages with hreflang {% endcomment %}
   {% for tag in site.tags %}
+  {% assign tag_slug = tag[0] | slugify %}
   <url>
-    <loc>{{ site.url }}{{ site.baseurl }}/tags/{{ tag[0] | slugify }}/</loc>
+    <loc>{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/en/tags/{{ tag_slug }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
+  </url>
+  <url>
+    <loc>{{ site.url }}{{ site.baseurl }}/es/tags/{{ tag_slug }}/</loc>
+    <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.5</priority>
+    <xhtml:link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/{{ tag_slug }}/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
   </url>
   {% endfor %}
+
 </urlset>

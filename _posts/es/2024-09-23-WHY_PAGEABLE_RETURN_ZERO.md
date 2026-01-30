@@ -6,6 +6,13 @@ categories: [Issue]
 tags: [Issue, Pageable, Spring, Java]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Por qué no ocurre error al ingresar valores de página que exceden el rango int en Pageable?"
+    answer: "La clase PageableHandlerMethodArgumentResolverSupport de Spring captura NumberFormatException y devuelve un valor predeterminado de 0."
+  - question: "¿Por qué ocurre error al implementar directamente con @RequestParam?"
+    answer: "@RequestParam intenta la conversión a int sin manejo de excepciones separado, por lo que ocurre un error 400 Bad Request en HandlerExceptionResolver al exceder el rango int."
+  - question: "¿Se puede personalizar este comportamiento?"
+    answer: "Puede personalizar PageableHandlerMethodArgumentResolver o usar @Valid con un validador personalizado para limitar los rangos de valores de página."
 ---
 
 ## Entorno de la situación
