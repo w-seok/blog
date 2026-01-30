@@ -25,3 +25,14 @@ package-lock.json
 # Misc
 #_sass/dist
 #assets/js/dist
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Claude
+.claude/
+
+# Test
+test-results/
