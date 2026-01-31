@@ -33,13 +33,27 @@
       var basePath = '{{ site.baseurl }}' || '';
       var pageLang = (path.indexOf('/en/') !== -1) ? 'en' : (path.indexOf('/es/') !== -1) ? 'es' : 'ko';
 
-      /* Pages that have language-specific versions (will redirect) */
-      var langSpecificPages = ['/', '/index.html', '/archives/', '/categories/', '/tags/'];
+      /* Pages that have language-specific versions (including with lang prefix) */
+      var tabPaths = ['/archives/', '/categories/', '/tags/'];
       var isLangSpecificPage = false;
-      for (var i = 0; i < langSpecificPages.length; i++) {
-        if (path === basePath + langSpecificPages[i] || path === basePath) {
-          isLangSpecificPage = true;
-          break;
+
+      /* Check homepage variants */
+      if (path === basePath + '/' || path === basePath || path === basePath + '/index.html' ||
+          path === basePath + '/en/' || path === basePath + '/en' ||
+          path === basePath + '/es/' || path === basePath + '/es') {
+        isLangSpecificPage = true;
+      }
+
+      /* Check tab pages (with or without language prefix) */
+      if (!isLangSpecificPage) {
+        for (var i = 0; i < tabPaths.length; i++) {
+          var tabPath = tabPaths[i];
+          if (path === basePath + tabPath ||
+              path === basePath + '/en' + tabPath ||
+              path === basePath + '/es' + tabPath) {
+            isLangSpecificPage = true;
+            break;
+          }
         }
       }
 
