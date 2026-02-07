@@ -6,6 +6,27 @@ categories: [Programming, Database]
 tags: [Flyway, Open Source, Tibero]
 author: w-seok
 lang: en
+faq:
+  - question: "How did you solve the lack of official Flyway support for Tibero?"
+    answer: "Leveraging the syntactic similarities between Tibero and Oracle, we directly implemented a Tibero module based on Flyway's Oracle support code, implementing 6 commands: baseline, migrate, clean, info, validate, and repair."
+  - question: "What are the key differences between Oracle and Tibero when implementing Flyway clean?"
+    answer: "Schema object names, query methods, and unsupported objects differ between Oracle and Tibero, requiring separate query construction for each object type by referencing Tibero's official documentation."
+  - question: "What was the process of contributing this as open source?"
+    answer: "After identifying other developers with the same needs on Flyway GitHub issues, we contributed the completed implementation as open source. Since Flyway maintainers had no plans for official support, it was resolved through community contribution."
+howto:
+  name: "How to Implement Tibero Database Support in Flyway"
+  description: "How to implement a migration tool for the Tibero database which Flyway does not officially support"
+  totalTime: "PT120M"
+  steps:
+    - name: "Analyze Flyway and Tibero compatibility"
+      text: "Analyze Flyway's Oracle support code and identify syntactic similarities and differences between Tibero and Oracle."
+    - name: "Implement Tibero-specific module"
+      text: "Referencing Oracle-based code, implement 6 commands (baseline, migrate, clean, info, validate, repair) adapted for Tibero."
+    - name: "Handle schema object differences"
+      text: "Referencing Tibero's official documentation, implement handling for schema object names, query methods, and unsupported objects that differ from Oracle."
+    - name: "Test and contribute to open source"
+      text: "Test that implemented commands work correctly in Tibero environment, apply within the team, then contribute as open source."
+
 ---
 
 ## Introduction

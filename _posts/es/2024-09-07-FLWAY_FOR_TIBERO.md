@@ -6,6 +6,26 @@ categories: [Programming, Database]
 tags: [Flyway, Open Source, Tibero]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Cómo resolvieron la falta de soporte oficial de Flyway para Tibero?"
+    answer: "Aprovechando las similitudes sintácticas entre Tibero y Oracle, implementamos directamente un módulo Tibero basado en el código de soporte Oracle de Flyway, implementando 6 comandos: baseline, migrate, clean, info, validate y repair."
+  - question: "¿Cuáles son las diferencias clave entre Oracle y Tibero al implementar Flyway clean?"
+    answer: "Los nombres de objetos de esquema, métodos de consulta y objetos no soportados difieren entre Oracle y Tibero, requiriendo construcción de consultas separadas para cada tipo de objeto referenciando la documentación oficial de Tibero."
+  - question: "¿Cuál fue el proceso de contribución como código abierto?"
+    answer: "Después de identificar otros desarrolladores con las mismas necesidades en los issues de GitHub de Flyway, contribuimos la implementación completada como código abierto. Como los mantenedores de Flyway no tenían planes de soporte oficial, se resolvió mediante contribución de la comunidad."
+howto:
+  name: "Cómo implementar soporte de base de datos Tibero en Flyway"
+  description: "Cómo implementar una herramienta de migración para la base de datos Tibero que Flyway no soporta oficialmente"
+  totalTime: "PT120M"
+  steps:
+    - name: "Analizar compatibilidad entre Flyway y Tibero"
+      text: "Analice el código de soporte Oracle de Flyway e identifique similitudes y diferencias sintácticas entre Tibero y Oracle."
+    - name: "Implementar módulo específico para Tibero"
+      text: "Referenciando el código basado en Oracle, implemente los 6 comandos (baseline, migrate, clean, info, validate, repair) adaptados para Tibero."
+    - name: "Manejar diferencias de objetos de esquema"
+      text: "Referenciando la documentación oficial de Tibero, implemente el manejo de nombres de objetos de esquema, métodos de consulta y objetos no soportados que difieren de Oracle."
+    - name: "Probar y contribuir al código abierto"
+      text: "Pruebe que los comandos implementados funcionen correctamente en el entorno Tibero, aplíquelos dentro del equipo y luego contribuya como código abierto."
 ---
 
 ## Introducción

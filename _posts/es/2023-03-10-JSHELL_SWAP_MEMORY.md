@@ -6,6 +6,24 @@ categories: [Programming, Java]
 tags: [Short, JShell, Swap Memory]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Qué es JShell y desde qué versión está disponible?"
+    answer: "JShell es una herramienta REPL interactiva disponible desde Java 9, que permite ejecutar código Java al instante y ver resultados sin un proceso de compilación separado."
+  - question: "¿Qué API se usa para verificar swap memory con JShell?"
+    answer: "Se accede al MBeanServer a través de ManagementFactory.getPlatformMBeanServer(), luego se consultan los atributos TotalSwapSpaceSize y FreeSwapSpaceSize usando el ObjectName java.lang:type=OperatingSystem."
+howto:
+  name: "Cómo verificar Swap Memory en tiempo real con JShell"
+  description: "Cómo verificar el estado del swap memory del servidor usando la API ManagementFactory en el entorno REPL de JShell"
+  totalTime: "PT5M"
+  steps:
+    - name: "Ejecutar JShell"
+      text: "Ejecute el comando jshell en la terminal para entrar al entorno REPL de Java."
+    - name: "Importar clases necesarias"
+      text: "Importe java.lang.management.ManagementFactory y las clases relacionadas de javax.management."
+    - name: "Acceder a MBeanServer y configurar ObjectName"
+      text: "Acceda al MBeanServer mediante ManagementFactory.getPlatformMBeanServer() y cree el ObjectName java.lang:type=OperatingSystem."
+    - name: "Consultar valores de Swap Memory"
+      text: "Use mBeanServer.getAttribute() para consultar los atributos TotalSwapSpaceSize y FreeSwapSpaceSize y verificar el estado del swap memory."
 ---
 Situación del problema
 ---

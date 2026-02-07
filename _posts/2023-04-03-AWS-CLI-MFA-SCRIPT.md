@@ -21,6 +21,13 @@ howto:
       text: "./aws_login.sh 123456 형태로 MFA 토큰값을 파라미터로 전달하여 실행합니다."
     - name: "AWS CLI 사용"
       text: "인증 완료 후 aws s3 ls --profile {myProfile} 등의 명령어를 사용합니다."
+faq:
+  - question: "AWS CLI에서 MFA 인증을 자동화해야 하는 이유는 무엇인가요?"
+    answer: "MFA가 활성화된 AWS 계정에서 여러 리전에 대해 각각 MFA 인증을 받아야 하는데, 프로필마다 수동으로 인증하는 과정이 번거롭기 때문에 스크립트로 자동화하면 효율적입니다."
+  - question: "이 스크립트에서 jq 대신 sed를 사용한 이유는 무엇인가요?"
+    answer: "sed는 추가 설치 없이 사용할 수 있는 표준 Unix 도구이며, aws sts get-session-token의 JSON 응답 구조가 고정적이기 때문에 sed로 충분히 파싱이 가능합니다."
+  - question: "MFA 자동화 스크립트 사용 시 보안상 주의할 점은 무엇인가요?"
+    answer: "반드시 로컬 환경에서만 사용하고, 토큰의 만료시간을 적절히 설정해야 합니다. 긴 만료시간은 편리하지만 보안에 취약하므로 적정 시간을 설정해야 합니다."
 ---
 서두
 ---

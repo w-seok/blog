@@ -21,6 +21,14 @@ howto:
       text: "Execute by passing MFA token value as parameter like ./aws_login.sh 123456."
     - name: "Use AWS CLI"
       text: "After authentication, use commands like aws s3 ls --profile {myProfile}."
+faq:
+  - question: "Why should you automate MFA authentication in AWS CLI?"
+    answer: "With MFA-enabled AWS accounts, you need to authenticate separately for each region. Manually authenticating for each profile is tedious, so automating with a script is more efficient."
+  - question: "Why does this script use sed instead of jq?"
+    answer: "sed is a standard Unix tool available without additional installation, and since the JSON response structure from aws sts get-session-token is fixed, sed is sufficient for parsing."
+  - question: "What security precautions should you take when using the MFA automation script?"
+    answer: "Use it only in local environments and set appropriate token expiration times. Long expiration times are convenient but create security vulnerabilities, so set a reasonable duration."
+
 ---
 Introduction
 ---

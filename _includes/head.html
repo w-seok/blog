@@ -118,6 +118,33 @@
     <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/posts/{{ post_slug }}/" />
     <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/posts/{{ post_slug }}/" />
     <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/posts/{{ post_slug }}/" />
+  {% elsif page.layout == 'archives' %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/archives/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/archives/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/archives/" />
+  {% elsif page.layout == 'categories' %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/" />
+  {% elsif page.layout == 'tags' %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/" />
+  {% elsif page.layout == 'category' %}
+    {% assign cat_slug = page.title | slugify %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/categories/{{ cat_slug }}/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/categories/{{ cat_slug }}/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/categories/{{ cat_slug }}/" />
+  {% elsif page.layout == 'tag' %}
+    {% assign tag_slug = page.title | slugify %}
+    <link rel="alternate" hreflang="ko" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
+    <link rel="alternate" hreflang="en" href="{{ site.url }}{{ site.baseurl }}/en/tags/{{ tag_slug }}/" />
+    <link rel="alternate" hreflang="es" href="{{ site.url }}{{ site.baseurl }}/es/tags/{{ tag_slug }}/" />
+    <link rel="alternate" hreflang="x-default" href="{{ site.url }}{{ site.baseurl }}/tags/{{ tag_slug }}/" />
   {% endif %}
 
   <title>

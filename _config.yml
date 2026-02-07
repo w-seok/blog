@@ -259,7 +259,6 @@ jekyll-archives:
 plugins:
   - jekyll-paginate-v2
   - jekyll-seo-tag
-  - jekyll-sitemap
   - jekyll-archives
   - jekyll-include-cache
   - jekyll-redirect-from

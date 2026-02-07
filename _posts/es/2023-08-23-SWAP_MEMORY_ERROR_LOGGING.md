@@ -6,6 +6,13 @@ categories: [Issue]
 tags: [Issue, Swap Memory, Log]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Cuál es la causa principal de la falla en la verificación de swap memory en instancias spot?"
+    answer: "Ocurre cuando el swap memory configurado durante la configuración de la instancia aún no se ha aplicado en la fase de verificación de memoria de la aplicación Java. Si total y free swap muestran 0 al consultar con ManagementFactory, la configuración aún no está completa."
+  - question: "¿Cuál fue la causa raíz de la falla en cadena?"
+    answer: "El sistema determinó incorrectamente que el swap memory era insuficiente e intentó reiniciar el proceso AI. Cuando el reinicio falló, el manejo de códigos de salida fue incompleto, y el método de apagado del servidor tampoco capturó errores debido a problemas de código legacy, causando fallas en cascada."
+  - question: "¿Cuáles son las soluciones clave para prevenir este problema?"
+    answer: "Cambiar para consumir la cola de mensajes solo después de confirmar que la configuración del swap memory está completa, agregar manejo integral de excepciones para códigos de salida de procesos, y ajustar el orden de basicAck para prevenir la desconexión de la cola."
 ---
 Introducción
 ---

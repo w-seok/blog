@@ -6,6 +6,26 @@ categories: [Programming, Database]
 tags: [Flyway, Open Source, Tibero]
 author: w-seok
 lang: ko-KR
+faq:
+  - question: "Flyway가 Tibero를 공식 지원하지 않는 상황에서 어떻게 해결했나요?"
+    answer: "Tibero와 Oracle의 문법적 유사성을 활용하여 Flyway의 Oracle 지원 코드를 기반으로 Tibero용 모듈을 직접 구현했습니다. baseline, migrate, clean, info, validate, repair 6가지 명령어를 구현했습니다."
+  - question: "Flyway clean 구현 시 Oracle과 Tibero의 주요 차이점은 무엇인가요?"
+    answer: "스키마 객체의 이름, 조회 방식, 지원하지 않는 객체 등이 Oracle과 Tibero 간에 상이하여, Tibero 공식 문서를 참고하여 각 객체별로 적절한 조회 쿼리를 별도로 작성해야 했습니다."
+  - question: "이 프로젝트를 오픈소스로 기여한 과정은 어떤가요?"
+    answer: "Flyway GitHub 이슈에서 같은 니즈를 가진 다른 개발자들을 확인하고, 구현 완료 후 오픈소스로 기여하였습니다. Flyway 메인테이너가 공식 지원 계획이 없었기에 커뮤니티 기여로 해결했습니다."
+howto:
+  name: "Flyway에서 Tibero 데이터베이스 지원을 구현하는 방법"
+  description: "Flyway가 공식 지원하지 않는 Tibero 데이터베이스에 대한 마이그레이션 도구를 구현하는 방법"
+  totalTime: "PT120M"
+  steps:
+    - name: "Flyway와 Tibero 호환성 분석"
+      text: "Flyway의 Oracle 지원 코드를 분석하고, Tibero와 Oracle 간의 문법적 유사점과 차이점을 파악합니다."
+    - name: "Tibero 전용 모듈 구현"
+      text: "Oracle 기반 코드를 참조하여 baseline, migrate, clean, info, validate, repair 6가지 명령어를 Tibero에 맞게 구현합니다."
+    - name: "스키마 객체별 차이점 처리"
+      text: "Tibero 공식 문서를 참고하여 Oracle과 다른 스키마 객체 이름, 조회 방식, 미지원 객체에 대한 처리를 구현합니다."
+    - name: "테스트 및 오픈소스 기여"
+      text: "구현된 명령어들이 Tibero 환경에서 정상 동작하는지 테스트하고, 팀 내 적용 후 오픈소스로 기여합니다."
 ---
 
 ## 들어가며

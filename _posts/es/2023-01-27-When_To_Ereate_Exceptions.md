@@ -6,6 +6,13 @@ categories: [Programming, Java]
 tags: [Exception, Error Management]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Por qué es costosa la creación de Exception en Java?"
+    answer: "Cuando se crea un Exception, se llama al método fillInStackTrace() que recopila información de la pila de llamadas incluyendo nombres de clases, métodos y números de línea, lo que lo convierte en una operación costosa."
+  - question: "¿Cuándo se debe evitar la creación de Exceptions?"
+    answer: "Cuando no es necesario lanzar un error, por ejemplo cuando los logs de advertencia son suficientes en niveles de umbral de memoria, es más apropiado usar log.warn() en lugar de crear Exceptions."
+  - question: "¿Cómo se puede reducir el costo de fillInStackTrace?"
+    answer: "Se puede sobrescribir fillInStackTrace() con una implementación vacía para eliminar el costo de recopilación de stack trace. Sin embargo, como se pierde información de depuración, solo debe usarse en situaciones específicas donde el rendimiento es crítico."
 ---
 Introducción
 ---

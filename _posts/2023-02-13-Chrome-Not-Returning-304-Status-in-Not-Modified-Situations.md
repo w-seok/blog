@@ -6,6 +6,13 @@ categories: [Issue]
 tags: [Issue, Chrome, Not Modified, HTTP Status Code]
 author: w-seok
 lang: ko-KR
+faq:
+  - question: "Chrome에서 ETag가 같은데도 304가 아닌 200을 반환하는 이유는 무엇인가요?"
+    answer: "Chrome v96까지 존재했던 브라우저 버그로, 캐시 재검증 시 ETag 값이 동일해도 304 Not Modified 대신 200 OK를 반환하는 문제가 있었습니다."
+  - question: "서버가 304를 정상 반환하는지 어떻게 확인할 수 있나요?"
+    answer: "curl 명령어에 If-None-Match 헤더를 포함하여 요청하거나, Wireshark로 네트워크 패킷을 캡처하여 서버의 실제 응답 상태 코드를 확인할 수 있습니다."
+  - question: "Cache-Control과 ETag를 함께 사용하는 캐싱 전략은 어떻게 동작하나요?"
+    answer: "Cache-Control의 max-age로 로컬 캐시 유효기간을 설정하고, 만료 후 ETag 값을 If-None-Match 헤더로 서버에 전송하여 리소스 변경 여부를 검증합니다. 변경이 없으면 304를 반환받아 네트워크 트래픽을 절약합니다."
 ---
 문제 상황
 ---

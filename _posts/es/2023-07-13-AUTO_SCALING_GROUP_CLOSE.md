@@ -6,6 +6,11 @@ categories: [Issue]
 tags: [Issue, AutoScaling Group, AWS, Spot Instance]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Por qué se terminan las instancias spot en AWS AutoScaling Group sin ser reclamadas forzosamente?"
+    answer: "AutoScaling Group intenta distribuir uniformemente las instancias entre las Zonas de Disponibilidad (AZ). Si una AZ particular tiene más instancias, termina instancias en esa AZ y lanza nuevas en AZs con menos instancias para mantener el equilibrio."
+  - question: "¿Cómo se puede distinguir entre terminación por balanceo de AZ y reclamación forzada de instancia spot?"
+    answer: "Se puede verificar la razón de terminación en el Activity History de la consola de AWS. Para balanceo de AZ, se registran mensajes como 'an instance was launched to balance instances across zones'."
 ---
 
 Introducción

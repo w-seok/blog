@@ -6,6 +6,13 @@ categories: [Programming, Java]
 tags: [Exception, Error Management]
 author: w-seok
 lang: ko-KR
+faq:
+  - question: "Java에서 Exception 생성 비용이 높은 이유는 무엇인가요?"
+    answer: "Exception 생성 시 fillInStackTrace() 메서드가 호출되어 호출 스택의 클래스명, 메서드명, 코드 줄 번호 등의 정보를 수집하기 때문에 비용이 발생합니다."
+  - question: "Exception 생성을 지양해야 하는 상황은 어떤 경우인가요?"
+    answer: "에러를 throw하지 않아도 되는 상황, 예를 들어 메모리 유의 수준에서 경고 로그만으로 충분한 경우에는 Exception 생성 대신 log.warn()을 사용하는 것이 적절합니다."
+  - question: "fillInStackTrace 비용을 줄이는 방법이 있나요?"
+    answer: "fillInStackTrace()를 오버라이드하여 빈 구현으로 대체하면 스택 트레이스 수집 비용을 제거할 수 있습니다. 단, 디버깅 정보가 손실되므로 성능이 중요한 특정 상황에서만 사용해야 합니다."
 ---
 서두
 ---

@@ -6,6 +6,12 @@ categories: [Issue]
 tags: [Issue, AutoScaling Group, AWS, Spot Instance]
 author: w-seok
 lang: en
+faq:
+  - question: "Why are spot instances terminated in AWS AutoScaling Group without being forcibly reclaimed?"
+    answer: "AutoScaling Group tries to evenly distribute instances across Availability Zones (AZs). If a particular AZ has more instances, it terminates instances in that AZ and launches new ones in AZs with fewer instances to maintain balance."
+  - question: "How can you distinguish between AZ balancing termination and spot instance forced reclamation?"
+    answer: "You can check the termination reason in the AWS Console's Activity History. For AZ balancing, messages like 'an instance was launched to balance instances across zones' are recorded."
+
 ---
 
 Introduction

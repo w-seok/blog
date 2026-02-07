@@ -6,6 +6,14 @@ categories: [Issue]
 tags: [Issue, Chrome, Not Modified, HTTP Status Code]
 author: w-seok
 lang: en
+faq:
+  - question: "Why does Chrome return 200 instead of 304 even when ETags match?"
+    answer: "This was a browser bug that existed until Chrome v96, where during cache revalidation, Chrome returned 200 OK instead of 304 Not Modified even when ETag values were identical."
+  - question: "How can you verify the server is correctly returning 304?"
+    answer: "You can use curl with an If-None-Match header containing the ETag value, or capture network packets with Wireshark to verify the server's actual response status code."
+  - question: "How does the caching strategy with Cache-Control and ETag work together?"
+    answer: "Cache-Control's max-age sets the local cache validity period. After expiration, the ETag value is sent to the server via If-None-Match header to validate resource changes. If unchanged, a 304 is returned, saving network traffic."
+
 ---
 Problem Situation
 ---

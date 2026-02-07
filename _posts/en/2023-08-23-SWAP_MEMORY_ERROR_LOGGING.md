@@ -6,13 +6,19 @@ categories: [Issue]
 tags: [Issue, Swap Memory, Log]
 author: w-seok
 lang: en
+faq:
+  - question: "What is the main cause of swap memory check failure on spot instances?"
+    answer: "It occurs when the swap memory configured during instance setup has not yet been applied at the Java application's memory check phase. If total and free swap show as 0 when queried via ManagementFactory, the setup is not yet complete."
+  - question: "What was the root cause of the chain failure?"
+    answer: "The system incorrectly determined swap memory was insufficient and tried to restart the AI process. When restart failed, exit code handling was incomplete, and the server shutdown method also failed to catch errors due to legacy issues, causing cascading failures."
+  - question: "What are the key solutions to prevent this problem?"
+    answer: "Change to consume message queue only after confirming swap memory setup is complete, add comprehensive exception handling for process exit codes, and adjust basicAck ordering to prevent queue disconnection."
+
 ---
-Introduction
----
+## Introduction
 >During a meal, Slack error alerts were going off like crazy.. Fortunately, another consumer server was processing without issues, and since error logging was being managed, I immediately went into `CloudWatch` to check and analyzed the code to understand the problem.
 
-Problem Situation
----
+## Problem Situation
 > In the currently running `AI image processing` service, the consumer server running on spot instances has logic to check the instance's `swap memory`.
 <br>This logic failed to work properly, causing all the exception handling logic to fail in a chain reaction, resulting in messages in the queue waiting indefinitely without being processed.
 <br><br>The spot instance has three processes and a message queue:
@@ -23,12 +29,10 @@ Problem Situation
 <br><br>The consumer application in service consumes request tasks from the message queue and communicates with the `AI process` (`python process` communicating with the `java` service) set up on the instance.
 
 ## Environment and Stack
----
 - `spring boot 3.*`, `java`, `python`
 - `aws`, `spot instance`
 
 ## Root Cause
----
 >Looking at the conclusion, it seems like a fairly simple problem, but actually it took time to find the problem<br><br>
 Tracking showed that various legacy issues including my mistakes were causing chain reactions...
 <br>Let's organize them in order, the problems are as follows

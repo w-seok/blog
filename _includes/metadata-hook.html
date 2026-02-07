@@ -68,6 +68,12 @@
 }
 </script>
 
+{% assign breadcrumb_lang_prefix = "" %}
+{% if page_lang == 'en' %}
+  {% assign breadcrumb_lang_prefix = "/en" %}
+{% elsif page_lang == 'es-ES' %}
+  {% assign breadcrumb_lang_prefix = "/es" %}
+{% endif %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -77,14 +83,14 @@
       "@type": "ListItem",
       "position": 1,
       "name": "Home",
-      "item": "{{ site.url }}{{ site.baseurl }}/"
+      "item": "{{ site.url }}{{ site.baseurl }}{{ breadcrumb_lang_prefix }}/"
     }
     {% if page.categories.size > 0 %},
     {
       "@type": "ListItem",
       "position": 2,
       "name": "{{ page.categories | first }}",
-      "item": "{{ site.url }}{{ site.baseurl }}/categories/{{ page.categories | first | slugify }}/"
+      "item": "{{ site.url }}{{ site.baseurl }}{{ breadcrumb_lang_prefix }}/categories/{{ page.categories | first | slugify }}/"
     },
     {
       "@type": "ListItem",

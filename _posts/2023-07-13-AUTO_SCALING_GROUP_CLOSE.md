@@ -6,6 +6,11 @@ categories: [Issue]
 tags: [Issue, AutoScaling Group, AWS, Spot Instance]
 author: w-seok
 lang: ko-KR
+faq:
+  - question: "AWS AutoScaling Group에서 스팟 인스턴스가 강제 회수 없이 종료되는 이유는 무엇인가요?"
+    answer: "AutoScaling Group은 가용영역(AZ) 간 인스턴스를 균등하게 분배하려고 합니다. 특정 AZ에 인스턴스가 많으면, 해당 AZ의 인스턴스를 종료하고 인스턴스가 적은 AZ에 새로 시작하여 균형을 맞춥니다."
+  - question: "AZ 밸런싱으로 인한 인스턴스 종료와 스팟 인스턴스 강제 회수를 어떻게 구분하나요?"
+    answer: "AWS 콘솔의 Activity History에서 종료 사유를 확인할 수 있습니다. AZ 밸런싱의 경우 'an instance was launched to balance instances across zones'와 같은 메시지가 기록됩니다."
 ---
 
 서두

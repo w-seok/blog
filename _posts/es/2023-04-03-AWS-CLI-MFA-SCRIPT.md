@@ -6,6 +6,13 @@ categories: [Programming, SHELL]
 tags: [AWS, Shell, MFA]
 author: w-seok
 lang: es-ES
+faq:
+  - question: "¿Por qué se debe automatizar la autenticación MFA en AWS CLI?"
+    answer: "Con cuentas AWS con MFA habilitado, se necesita autenticar por separado para cada región. Autenticar manualmente cada perfil es tedioso, por lo que automatizar con un script es más eficiente."
+  - question: "¿Por qué este script usa sed en lugar de jq?"
+    answer: "sed es una herramienta estándar de Unix disponible sin instalación adicional, y como la estructura de respuesta JSON de aws sts get-session-token es fija, sed es suficiente para el parseo."
+  - question: "¿Qué precauciones de seguridad se deben tomar al usar el script de automatización MFA?"
+    answer: "Úselo solo en entornos locales y configure tiempos de expiración de token apropiados. Tiempos de expiración largos son convenientes pero crean vulnerabilidades de seguridad, así que establezca una duración razonable."
 howto:
   name: "Cómo Configurar el Script de Automatización de Autenticación MFA de AWS CLI"
   description: "Cómo escribir y ejecutar un script shell que automatiza la autenticación MFA en AWS CLI"
